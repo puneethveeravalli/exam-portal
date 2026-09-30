@@ -1,0 +1,850 @@
+.admin-exams-page {
+  min-height: 100vh;
+  width: 100%;
+  padding: 46px 32px 70px;
+
+  background: #f6f8fb;
+  color: #172033;
+}
+
+/* ========================================
+   PAGE HEADER
+======================================== */
+
+.exams-page-header {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto 30px;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+
+  animation: examsFadeUp 0.4s ease both;
+}
+
+.exams-eyebrow {
+  margin: 0 0 9px;
+
+  color: #667085;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+
+.exams-page-header h1 {
+  margin: 0;
+
+  color: #101828;
+  font-size: clamp(30px, 4vw, 40px);
+  line-height: 1.1;
+  letter-spacing: -1.2px;
+  font-weight: 750;
+}
+
+.exams-page-header > div:first-child > p:last-child {
+  max-width: 650px;
+  margin: 12px 0 0;
+
+  color: #667085;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.exam-count {
+  min-width: 130px;
+  padding: 14px 18px;
+
+  border: 1px solid #e4e8ef;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  text-align: right;
+}
+
+.exam-count span {
+  display: block;
+
+  color: #98a2b3;
+  font-size: 10px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.exam-count strong {
+  display: block;
+  margin-top: 3px;
+
+  color: #172033;
+  font-size: 20px;
+  font-weight: 750;
+}
+
+/* ========================================
+   NOTIFICATIONS
+======================================== */
+
+.exam-notification {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto 18px;
+  padding: 14px 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  border-radius: 10px;
+
+  animation: examsFadeUp 0.25s ease both;
+}
+
+.exam-notification strong {
+  display: block;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.exam-notification p {
+  margin: 3px 0 0;
+
+  font-size: 12px;
+}
+
+.exam-notification button {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+
+  border: 0;
+  border-radius: 6px;
+
+  background: transparent;
+
+  font-family: inherit;
+  font-size: 18px;
+
+  cursor: pointer;
+}
+
+.exam-notification.success {
+  border: 1px solid #cce8d7;
+  background: #f5fcf7;
+  color: #027a48;
+}
+
+.exam-notification.error {
+  border: 1px solid #f0d5d5;
+  background: #fff8f8;
+  color: #b42318;
+}
+
+/* ========================================
+   MAIN CARD
+======================================== */
+
+.exam-management-card {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto 22px;
+
+  overflow: hidden;
+
+  background: #ffffff;
+  border: 1px solid #e4e8ef;
+  border-radius: 14px;
+
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.03);
+
+  animation: examsFadeUp 0.5s ease both;
+}
+
+.exam-card-header {
+  padding: 22px 24px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+
+  border-bottom: 1px solid #eef1f5;
+}
+
+.exam-card-header h2 {
+  margin: 0;
+
+  color: #172033;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.exam-card-header p {
+  max-width: 700px;
+  margin: 5px 0 0;
+
+  color: #7a8496;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.header-label {
+  flex: 0 0 auto;
+
+  padding: 6px 9px;
+
+  border-radius: 5px;
+
+  background: #f2f4f7;
+  color: #667085;
+
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.8px;
+}
+
+/* ========================================
+   CREATE EXAM FORM
+======================================== */
+
+.create-exam-form {
+  padding: 24px;
+
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.exam-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.exam-form-field.full-width {
+  grid-column: 1 / -1;
+}
+
+.exam-form-field label {
+  color: #344054;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.exam-form-field input,
+.exam-form-field textarea,
+.exam-form-field select {
+  width: 100%;
+
+  border: 1px solid #dfe4ec;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #172033;
+
+  font-family: inherit;
+  font-size: 13px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.exam-form-field input,
+.exam-form-field select {
+  height: 44px;
+  padding: 0 13px;
+}
+
+.exam-form-field textarea {
+  min-height: 105px;
+  padding: 12px 13px;
+
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.exam-form-field input::placeholder,
+.exam-form-field textarea::placeholder {
+  color: #a0a8b5;
+}
+
+.exam-form-field input:hover,
+.exam-form-field textarea:hover,
+.exam-form-field select:hover {
+  border-color: #cbd2dc;
+}
+
+.exam-form-field input:focus,
+.exam-form-field textarea:focus,
+.exam-form-field select:focus {
+  border-color: #667085;
+  box-shadow: 0 0 0 3px rgba(52, 64, 84, 0.08);
+}
+
+/* Duration */
+
+.input-with-unit {
+  position: relative;
+}
+
+.input-with-unit input {
+  padding-right: 75px;
+}
+
+.input-with-unit span {
+  position: absolute;
+  top: 50%;
+  right: 13px;
+
+  transform: translateY(-50%);
+
+  color: #98a2b3;
+  font-size: 11px;
+
+  pointer-events: none;
+}
+
+.exam-form-footer {
+  grid-column: 1 / -1;
+  padding-top: 2px;
+}
+
+.primary-exam-button {
+  min-width: 145px;
+  height: 42px;
+  padding: 0 17px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border: 1px solid #172033;
+  border-radius: 8px;
+
+  background: #172033;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.primary-exam-button:hover:not(:disabled) {
+  background: #273249;
+  transform: translateY(-1px);
+}
+
+.primary-exam-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   ASSIGNMENT
+======================================== */
+
+.assignment-form {
+  padding: 24px;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  align-items: end;
+  gap: 20px;
+}
+
+.assignment-action {
+  display: flex;
+}
+
+.assignment-message {
+  margin: 0 24px 24px;
+  padding: 12px 14px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  border-radius: 8px;
+
+  font-size: 12px;
+}
+
+.assignment-message strong {
+  font-size: 12px;
+}
+
+.assignment-message span {
+  font-size: 11px;
+}
+
+.assignment-message.success {
+  border: 1px solid #cce8d7;
+  background: #f5fcf7;
+  color: #027a48;
+}
+
+.assignment-message.error {
+  border: 1px solid #f0d5d5;
+  background: #fff8f8;
+  color: #b42318;
+}
+
+.select-loading {
+  height: 44px;
+  padding: 0 13px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  border: 1px solid #dfe4ec;
+  border-radius: 8px;
+
+  color: #7a8496;
+  font-size: 12px;
+}
+
+.small-spinner {
+  width: 15px;
+  height: 15px;
+
+  border: 2px solid #e4e7ec;
+  border-top-color: #667085;
+  border-radius: 50%;
+
+  animation: examsSpin 0.8s linear infinite;
+}
+
+/* ========================================
+   EXISTING EXAMS
+======================================== */
+
+.existing-exams-card {
+  margin-bottom: 0;
+}
+
+.exam-list-count {
+  padding: 6px 10px;
+
+  border: 1px solid #e1e6ee;
+  border-radius: 20px;
+
+  color: #667085;
+  background: #ffffff;
+
+  font-size: 10px;
+  font-weight: 650;
+}
+
+/* ========================================
+   TABLE
+======================================== */
+
+.exam-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.exam-table {
+  width: 100%;
+  min-width: 1050px;
+
+  border-collapse: collapse;
+
+  font-size: 12px;
+}
+
+.exam-table th {
+  padding: 12px 18px;
+
+  border-bottom: 1px solid #e4e8ef;
+
+  background: #f8f9fb;
+  color: #667085;
+
+  text-align: left;
+
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.35px;
+
+  white-space: nowrap;
+}
+
+.exam-table td {
+  padding: 14px 18px;
+
+  border-bottom: 1px solid #eef1f5;
+
+  color: #475467;
+
+  vertical-align: middle;
+}
+
+.exam-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.exam-table tbody tr {
+  transition: background 0.18s ease;
+}
+
+.exam-table tbody tr:hover {
+  background: #fafbfc;
+}
+
+/* Exam table title */
+
+.exam-table-title {
+  min-width: 230px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.exam-table-mark {
+  flex: 0 0 auto;
+
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #eef2f7;
+  color: #344054;
+
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 0.5px;
+}
+
+.exam-table-title strong {
+  display: block;
+
+  color: #172033;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.exam-table-title span {
+  display: block;
+
+  max-width: 250px;
+  margin-top: 3px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #98a2b3;
+  font-size: 10px;
+}
+
+/* Status */
+
+.exam-status {
+  display: inline-flex;
+  padding: 5px 8px;
+
+  border-radius: 20px;
+
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.exam-status.published {
+  background: #ecfdf3;
+  color: #027a48;
+}
+
+.exam-status.draft {
+  background: #f2f4f7;
+  color: #667085;
+}
+
+/* Actions */
+
+.exam-table-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.table-action {
+  height: 31px;
+  padding: 0 9px;
+
+  border-radius: 6px;
+
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.table-action.manage {
+  border: 1px solid #dfe4ec;
+
+  background: #ffffff;
+  color: #344054;
+}
+
+.table-action.manage:hover {
+  background: #f5f7fa;
+}
+
+.table-action.publish {
+  border: 1px solid #cce8d7;
+
+  background: #f5fcf7;
+  color: #027a48;
+}
+
+.table-action.publish:hover {
+  background: #ecfdf3;
+}
+
+.table-action.unpublish {
+  border: 1px solid #f0caca;
+
+  background: #fffafa;
+  color: #b42318;
+}
+
+.table-action.unpublish:hover {
+  background: #fff1f1;
+}
+
+/* ========================================
+   STATES
+======================================== */
+
+.exam-state {
+  min-height: 230px;
+  padding: 35px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+}
+
+.exam-state h3 {
+  margin: 13px 0 4px;
+
+  color: #344054;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.exam-state p {
+  max-width: 450px;
+  margin: 0;
+
+  color: #7a8496;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.empty-exam-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f0f3f7;
+  color: #667085;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.exam-state.error-state {
+  background: #fffafa;
+}
+
+.exam-state.error-state h3 {
+  color: #b42318;
+}
+
+.secondary-exam-button {
+  height: 38px;
+  margin-top: 17px;
+  padding: 0 15px;
+
+  border: 1px solid #dfe4ec;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #344054;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+.loading-spinner {
+  width: 27px;
+  height: 27px;
+
+  border: 2px solid #e4e7ec;
+  border-top-color: #344054;
+  border-radius: 50%;
+
+  animation: examsSpin 0.8s linear infinite;
+}
+
+/* ========================================
+   ANIMATIONS
+======================================== */
+
+@keyframes examsFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes examsSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 850px) {
+  .admin-exams-page {
+    padding: 36px 22px 60px;
+  }
+
+  .exams-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .exam-count {
+    text-align: left;
+  }
+
+  .assignment-form {
+    grid-template-columns: 1fr;
+  }
+
+  .assignment-action {
+    width: 100%;
+  }
+
+  .assignment-action .primary-exam-button {
+    width: 100%;
+  }
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 600px) {
+  .admin-exams-page {
+    padding: 30px 16px 50px;
+  }
+
+  .exams-page-header h1 {
+    font-size: 31px;
+  }
+
+  .exam-card-header {
+    padding: 19px;
+    flex-direction: column;
+  }
+
+  .create-exam-form,
+  .assignment-form {
+    padding: 19px;
+  }
+
+  .create-exam-form {
+    grid-template-columns: 1fr;
+  }
+
+  .exam-form-field.full-width {
+    grid-column: auto;
+  }
+
+  .exam-form-footer {
+    grid-column: auto;
+  }
+
+  .primary-exam-button {
+    width: 100%;
+  }
+
+  .exam-notification {
+    align-items: flex-start;
+  }
+}
+
+/* ========================================
+   REDUCED MOTION
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .exams-page-header,
+  .exam-notification,
+  .exam-management-card {
+    animation: none;
+  }
+
+  .loading-spinner,
+  .small-spinner {
+    animation: none;
+  }
+
+  .primary-exam-button,
+  .exam-form-field input,
+  .exam-form-field textarea,
+  .exam-form-field select,
+  .exam-table tbody tr,
+  .table-action {
+    transition: none;
+  }
+}

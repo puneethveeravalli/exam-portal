@@ -1,0 +1,197 @@
+/* =========================================
+   LOGIN PAGE
+   Built on shared ep- primitives (index.css).
+   Only page layout and page-specific details here.
+   ========================================= */
+
+.login-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px 24px;
+}
+
+/* =========================================
+   CONTAINER
+   ========================================= */
+
+.login-container {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+}
+
+/* =========================================
+   CARD
+   ep-card supplies surface, border, radius, shadow.
+   ep-frame supplies the Focus Frame corners.
+   ========================================= */
+
+.login-card {
+  padding: 40px;
+  animation: epFadeUp var(--ep-slow) var(--ep-ease) both;
+}
+
+/* =========================================
+   BRAND
+   ========================================= */
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.login-brand-mark {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  border-radius: var(--ep-radius-sm);
+  background: var(--ep-ink);
+  color: var(--ep-surface);
+
+  font-family: var(--ep-font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.login-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.login-brand-name {
+  color: var(--ep-ink);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.login-brand-caption {
+  color: var(--ep-ink-mute);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+/* =========================================
+   HEADING
+   ========================================= */
+
+.login-heading {
+  margin-bottom: 32px;
+}
+
+.login-title {
+  margin: 0;
+  font-size: clamp(40px, 8vw, 52px);
+}
+
+.login-heading p {
+  margin: 12px 0 0;
+  color: var(--ep-ink-soft);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* =========================================
+   FORM
+   ========================================= */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-submit {
+  margin-top: 4px;
+}
+
+/* =========================================
+   FOOTER
+   ========================================= */
+
+.login-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+
+  margin-top: 32px;
+  padding-top: 24px;
+
+  border-top: 1px solid var(--ep-line);
+
+  color: var(--ep-ink-mute);
+  font-size: 12px;
+  text-align: center;
+}
+
+.login-footer-divider {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--ep-line);
+}
+
+.login-footer-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ep-success);
+  font-weight: 500;
+}
+
+.login-copyright {
+  margin: 24px 0 0;
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 520px) {
+  .login-page {
+    padding: 24px 16px;
+  }
+
+  .login-card {
+    padding: 28px 22px;
+  }
+
+  .login-brand {
+    margin-bottom: 32px;
+  }
+
+  .login-heading {
+    margin-bottom: 24px;
+  }
+}
+
+/* =========================================
+   REDUCED MOTION
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .login-card {
+    animation: none;
+  }
+}

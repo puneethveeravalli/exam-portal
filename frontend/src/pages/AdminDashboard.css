@@ -1,0 +1,410 @@
+/* =========================================
+   ADMIN DASHBOARD
+   Built on shared ep- primitives (index.css).
+   Prefix: admin-dash-
+   ========================================= */
+
+.admin-dash {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: var(--ep-ink);
+}
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.admin-dash-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+
+  height: 72px;
+
+  background: var(--ep-canvas);
+  border-bottom: 1px solid var(--ep-line);
+}
+
+.admin-dash-header-inner {
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+/* Brand */
+
+.admin-dash-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.admin-dash-brand-mark {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  border-radius: var(--ep-radius-sm);
+  background: var(--ep-ink);
+  color: var(--ep-surface);
+
+  font-family: var(--ep-font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.admin-dash-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-dash-brand-name {
+  color: var(--ep-ink);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.admin-dash-brand-caption {
+  color: var(--ep-ink-mute);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+/* Profile */
+
+.admin-dash-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-dash-avatar {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+  background: var(--ep-accent-tint);
+  color: var(--ep-accent);
+
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.admin-dash-user {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 96px;
+}
+
+.admin-dash-user strong {
+  color: var(--ep-ink);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.admin-dash-user span {
+  color: var(--ep-ink-mute);
+  font-family: var(--ep-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.admin-dash-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* =========================================
+   MAIN
+   ========================================= */
+
+.admin-dash-main {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+}
+
+/* =========================================
+   INTRO (Focus Frame lives here, once)
+   ========================================= */
+
+.admin-dash-intro {
+  margin-bottom: 64px;
+  /* room so the frame brackets are never clipped */
+  padding: 8px;
+}
+
+.admin-dash-intro-panel {
+  padding: 40px;
+  background: var(--ep-surface);
+  border: 1px solid var(--ep-line);
+  border-radius: var(--ep-radius-lg);
+  box-shadow: var(--ep-shadow-md);
+}
+
+.admin-dash-intro-panel .ep-eyebrow {
+  margin: 0 0 16px;
+}
+
+.admin-dash-title {
+  margin: 0;
+}
+
+.admin-dash-intro-text {
+  max-width: 560px;
+  margin: 20px 0 0;
+
+  color: var(--ep-ink-soft);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* =========================================
+   SECTION
+   ========================================= */
+
+.admin-dash-section-heading {
+  margin-bottom: 24px;
+}
+
+.admin-dash-section-heading h2 {
+  margin: 0;
+
+  color: var(--ep-ink);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.admin-dash-section-heading p {
+  margin: 4px 0 0;
+
+  color: var(--ep-ink-soft);
+  font-size: 14px;
+}
+
+/* =========================================
+   CARDS
+   ========================================= */
+
+.admin-dash-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.admin-dash-card {
+  min-height: 280px;
+  padding: 28px;
+
+  display: flex;
+  flex-direction: column;
+
+  text-align: left;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.admin-dash-card:hover {
+  color: inherit;
+  border-color: var(--ep-accent);
+}
+
+/* Button variant: strip native button chrome */
+
+.admin-dash-card-button {
+  width: 100%;
+  appearance: none;
+  font: inherit;
+}
+
+/* Top row */
+
+.admin-dash-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-dash-card-icon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: var(--ep-radius-md);
+  background: var(--ep-surface-alt);
+  border: 1px solid var(--ep-line);
+  color: var(--ep-ink-soft);
+
+  transition:
+    background var(--ep-base) var(--ep-ease),
+    border-color var(--ep-base) var(--ep-ease),
+    color var(--ep-base) var(--ep-ease);
+}
+
+.admin-dash-card-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.admin-dash-card:hover .admin-dash-card-icon {
+  background: var(--ep-accent-tint);
+  border-color: transparent;
+  color: var(--ep-accent);
+}
+
+.admin-dash-card-index {
+  color: var(--ep-ink-mute);
+  font-size: 13px;
+}
+
+/* Content */
+
+.admin-dash-card-content {
+  margin-top: 32px;
+}
+
+.admin-dash-card-content h3 {
+  margin: 0;
+
+  color: var(--ep-ink);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.admin-dash-card-content p {
+  margin: 8px 0 0;
+
+  color: var(--ep-ink-soft);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* Action */
+
+.admin-dash-card-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: auto;
+  padding-top: 28px;
+
+  color: var(--ep-ink);
+  font-size: 13px;
+  font-weight: 600;
+
+  transition: color var(--ep-fast) var(--ep-ease);
+}
+
+.admin-dash-card-arrow {
+  display: inline-block;
+  transition: transform var(--ep-base) var(--ep-ease);
+}
+
+.admin-dash-card:hover .admin-dash-card-action {
+  color: var(--ep-accent);
+}
+
+.admin-dash-card:hover .admin-dash-card-arrow {
+  transform: translateX(4px);
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 960px) {
+  .admin-dash-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .admin-dash-card {
+    min-height: 220px;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-dash-header {
+    height: auto;
+    min-height: 64px;
+  }
+
+  .admin-dash-header-inner {
+    padding: 12px 16px;
+  }
+
+  .admin-dash-user {
+    display: none;
+  }
+
+  .admin-dash-brand-caption {
+    display: none;
+  }
+
+  .admin-dash-main {
+    padding: 32px 16px 56px;
+  }
+
+  .admin-dash-intro {
+    margin-bottom: 48px;
+    padding: 6px;
+  }
+
+  .admin-dash-intro-panel {
+    padding: 28px 22px;
+  }
+
+  .admin-dash-card {
+    padding: 22px;
+  }
+}
+
+/* =========================================
+   REDUCED MOTION
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-dash-card-icon,
+  .admin-dash-card-action,
+  .admin-dash-card-arrow {
+    transition: none;
+  }
+
+  .admin-dash-card:hover .admin-dash-card-arrow {
+    transform: none;
+  }
+}
