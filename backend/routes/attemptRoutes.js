@@ -12,7 +12,8 @@ const {
     getAttempt,
     getMyAttempts,
     getAllAttempts,
-    recordProctoringEvent
+    recordProctoringEvent,
+    getAdminAttemptDetails
 } = require("../controllers/attemptController");
 
 const router = express.Router();
@@ -34,6 +35,12 @@ router.get(
   authenticate,
   authorize("ADMIN"),
   getAllAttempts
+);
+router.get(
+  "/all-results/:attemptId",
+  authenticate,
+  authorize("ADMIN"),
+  getAdminAttemptDetails
 );
 router.post(
   "/:attemptId/proctoring-event",

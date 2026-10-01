@@ -1,230 +1,377 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import api from "../services/api";
 import "./AdminDashboard.css";
 
 function AdminDashboard() {
-  const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
+  const [stats, setStats] = useState({
+    students: 0,
+    exams: 0,
+    hiringDrives: 0,
+    results: 0,
+  });
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadDashboardData = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const [
+          studentsResponse,
+          examsResponse,
+          drivesResponse,
+          resultsResponse,
+        ] = await Promise.all([
+          api.get("/admin/students"),
+          api.get("/exams"),
+          api.get("/hiring-drives"),
+          api.get("/attempts/all-results"),
+        ]);
+
+        setStats({
+          students: Array.isArray(studentsResponse.data)
+            ? studentsResponse.data.length
+            : studentsResponse.data?.students?.length || 0,
+
+          exams: Array.isArray(examsResponse.data)
+            ? examsResponse.data.length
+            : examsResponse.data?.exams?.length || 0,
+
+          hiringDrives: Array.isArray(drivesResponse.data)
+            ? drivesResponse.data.length
+            : drivesResponse.data?.hiringDrives?.length || 0,
+
+          results: Array.isArray(resultsResponse.data)
+            ? resultsResponse.data.length
+            : resultsResponse.data?.attempts?.length || 0,
+        });
+      } catch (error) {
+        console.error("Dashboard data error:", error);
+
+        setError(
+          error.response?.data?.message ||
+            "Unable to load dashboard statistics."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadDashboardData();
+  }, []);
 
   return (
-    <div className="admin-dash">
-      {/* Header */}
-      <header className="admin-dash-header">
-        <div className="admin-dash-header-inner">
-          <div className="admin-dash-brand">
-            <div className="admin-dash-brand-mark" aria-hidden="true">
-              EP
-            </div>
+    <div className="admin-dashboard-page">
 
-            <div className="admin-dash-brand-text">
-              <span className="admin-dash-brand-name">Exam Portal</span>
-              <span className="admin-dash-brand-caption">Administration</span>
-            </div>
-          </div>
+      {/* Page Header */}
+      <header className="dashboard-page-header">
+        <div>
+          <p className="dashboard-eyebrow">
+            ADMINISTRATION
+          </p>
 
-          <div className="admin-dash-profile">
-            <div className="admin-dash-avatar" aria-hidden="true">
-              {user?.name?.charAt(0)?.toUpperCase() || "A"}
-            </div>
+          <h1>Dashboard</h1>
 
-            <div className="admin-dash-user">
-              <strong>{user?.name || "Administrator"}</strong>
-              <span>{user?.role || "ADMIN"}</span>
-            </div>
+          <p>
+            Welcome back, {user?.name || "Administrator"}.
+            Manage your hiring and examination operations
+            from one workspace.
+          </p>
+        </div>
 
-            <button
-              className="ep-btn ep-btn--secondary ep-btn--sm"
-              onClick={handleLogout}
-              type="button"
-            >
-              <svg
-                className="admin-dash-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M9 4.5H6.5A1.5 1.5 0 0 0 5 6v12a1.5 1.5 0 0 0 1.5 1.5H9" />
-                <path d="M15 8l4 4-4 4" />
-                <path d="M19 12H9.5" />
-              </svg>
-              Logout
-            </button>
-          </div>
+        <div className="dashboard-date">
+          <span>Today</span>
+          <strong>
+            {new Date().toLocaleDateString("en-IN", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            })}
+          </strong>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="admin-dash-main">
-        <section
-          className="admin-dash-intro ep-reveal"
-          style={{ "--i": 0 }}
-        >
-          <div className="admin-dash-intro-panel ep-frame">
-            <p className="ep-eyebrow">Administration</p>
 
-            <h1 className="ep-display admin-dash-title">
-              Your <em>dashboard</em>
-            </h1>
+      {/* Error */}
+      {error && (
+        <div className="dashboard-error">
+          {error}
+        </div>
+      )}
 
-            <p className="admin-dash-intro-text">
-              Manage students, examinations, assignments, and results from one
-              central workspace.
+
+      {/* Statistics */}
+      <section className="dashboard-stats">
+
+        <div className="stat-card">
+          <div className="stat-card-top">
+            <span>Students</span>
+            <div className="stat-icon">
+              S
+            </div>
+          </div>
+
+          <strong className="stat-value">
+            {loading ? "—" : stats.students}
+          </strong>
+
+          <span className="stat-description">
+            Registered students
+          </span>
+        </div>
+
+
+        <div className="stat-card">
+          <div className="stat-card-top">
+            <span>Exams</span>
+            <div className="stat-icon">
+              E
+            </div>
+          </div>
+
+          <strong className="stat-value">
+            {loading ? "—" : stats.exams}
+          </strong>
+
+          <span className="stat-description">
+            Exams created
+          </span>
+        </div>
+
+
+        <div className="stat-card">
+          <div className="stat-card-top">
+            <span>Hiring Drives</span>
+            <div className="stat-icon">
+              H
+            </div>
+          </div>
+
+          <strong className="stat-value">
+            {loading ? "—" : stats.hiringDrives}
+          </strong>
+
+          <span className="stat-description">
+            Hiring drives
+          </span>
+        </div>
+
+
+        <div className="stat-card">
+          <div className="stat-card-top">
+            <span>Results</span>
+            <div className="stat-icon">
+              R
+            </div>
+          </div>
+
+          <strong className="stat-value">
+            {loading ? "—" : stats.results}
+          </strong>
+
+          <span className="stat-description">
+            Exam attempts
+          </span>
+        </div>
+
+      </section>
+
+
+      {/* Main dashboard content */}
+      <section className="dashboard-grid">
+
+        {/* Hiring Drives */}
+        <div className="dashboard-panel">
+          <div className="panel-header">
+            <div>
+              <h2>Hiring Drives</h2>
+              <p>
+                Manage active recruitment drives.
+              </p>
+            </div>
+
+            <Link to="/admin/hiring-drives">
+              View all
+            </Link>
+          </div>
+
+          <div className="panel-content">
+            <p>
+              Create and manage hiring drives, connect
+              batches, assign examinations, and manage
+              candidates.
             </p>
-          </div>
-        </section>
 
-        {/* Management Cards */}
-        <section
-          className="admin-dash-section ep-reveal"
-          style={{ "--i": 1 }}
-        >
-          <div className="admin-dash-section-heading">
-            <h2>Management</h2>
-            <p>Choose an area to manage the exam portal.</p>
+            <Link
+              to="/admin/hiring-drives"
+              className="dashboard-action"
+            >
+              Manage Hiring Drives
+            </Link>
+          </div>
+        </div>
+
+
+        {/* Exams */}
+        <div className="dashboard-panel">
+          <div className="panel-header">
+            <div>
+              <h2>Examinations</h2>
+              <p>
+                Manage your examination library.
+              </p>
+            </div>
+
+            <Link to="/admin/exams">
+              View all
+            </Link>
           </div>
 
-          <div className="admin-dash-grid">
-            {/* Students */}
+          <div className="panel-content">
+            <p>
+              Create exams, configure sections, generate
+              questions, and publish examinations.
+            </p>
+
+            <Link
+              to="/admin/exams/create"
+              className="dashboard-action"
+            >
+              Create New Exam
+            </Link>
+          </div>
+        </div>
+
+
+        {/* Students */}
+        <div className="dashboard-panel">
+          <div className="panel-header">
+            <div>
+              <h2>Students</h2>
+              <p>
+                Manage registered candidates.
+              </p>
+            </div>
+
+            <Link to="/admin/students">
+              View all
+            </Link>
+          </div>
+
+          <div className="panel-content">
+            <p>
+              Add students, upload candidates in bulk,
+              manage organizations, and handle credentials.
+            </p>
+
             <Link
               to="/admin/students"
-              className="admin-dash-card ep-card ep-card--interactive ep-reveal"
-              style={{ "--i": 2 }}
+              className="dashboard-action"
             >
-              <div className="admin-dash-card-top">
-                <div className="admin-dash-card-icon" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="9" cy="8" r="3.25" />
-                    <path d="M3.5 19a5.5 5.5 0 0 1 11 0" />
-                    <path d="M16 5.2a3.25 3.25 0 0 1 0 5.6" />
-                    <path d="M17.5 14.2A5.5 5.5 0 0 1 20.5 19" />
-                  </svg>
-                </div>
-
-                <span className="admin-dash-card-index ep-mono">01</span>
-              </div>
-
-              <div className="admin-dash-card-content">
-                <h3>Manage Students</h3>
-
-                <p>
-                  Create student accounts, manage credentials, and control
-                  student access.
-                </p>
-              </div>
-
-              <div className="admin-dash-card-action">
-                Open students
-                <span className="admin-dash-card-arrow" aria-hidden="true">
-                  →
-                </span>
-              </div>
+              Manage Students
             </Link>
-
-            {/* Exams */}
-            <Link
-              to="/admin/exams"
-              className="admin-dash-card ep-card ep-card--interactive ep-reveal"
-              style={{ "--i": 3 }}
-            >
-              <div className="admin-dash-card-top">
-                <div className="admin-dash-card-icon" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M7 3.75h7.5L19 8.25V19a1.25 1.25 0 0 1-1.25 1.25H7A1.25 1.25 0 0 1 5.75 19V5A1.25 1.25 0 0 1 7 3.75Z" />
-                    <path d="M14.5 3.75v4.5H19" />
-                    <path d="M9 12.5h6" />
-                    <path d="M9 16h4" />
-                  </svg>
-                </div>
-
-                <span className="admin-dash-card-index ep-mono">02</span>
-              </div>
-
-              <div className="admin-dash-card-content">
-                <h3>Manage Exams</h3>
-
-                <p>
-                  Create examinations, add questions, publish exams, and assign
-                  them to students.
-                </p>
-              </div>
-
-              <div className="admin-dash-card-action">
-                Open exams
-                <span className="admin-dash-card-arrow" aria-hidden="true">
-                  →
-                </span>
-              </div>
-            </Link>
-
-            {/* Results */}
-            <button
-              className="admin-dash-card admin-dash-card-button ep-card ep-card--interactive ep-reveal"
-              style={{ "--i": 4 }}
-              onClick={() => navigate("/admin/results")}
-              type="button"
-            >
-              <div className="admin-dash-card-top">
-                <div className="admin-dash-card-icon" aria-hidden="true">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M4.5 19.5h15" />
-                    <path d="M7 16v-4.5" />
-                    <path d="M12 16V7.5" />
-                    <path d="M17 16v-6.5" />
-                  </svg>
-                </div>
-
-                <span className="admin-dash-card-index ep-mono">03</span>
-              </div>
-
-              <div className="admin-dash-card-content">
-                <h3>View Results</h3>
-
-                <p>
-                  Review completed examinations, scores, submission status, and
-                  student performance.
-                </p>
-              </div>
-
-              <div className="admin-dash-card-action">
-                Open results
-                <span className="admin-dash-card-arrow" aria-hidden="true">
-                  →
-                </span>
-              </div>
-            </button>
           </div>
-        </section>
-      </main>
+        </div>
+
+
+        {/* Results */}
+        <div className="dashboard-panel">
+          <div className="panel-header">
+            <div>
+              <h2>Results</h2>
+              <p>
+                Review examination performance.
+              </p>
+            </div>
+
+            <Link to="/admin/results">
+              View all
+            </Link>
+          </div>
+
+          <div className="panel-content">
+            <p>
+              Review submitted examinations, scores,
+              security events, and detailed answers.
+            </p>
+
+            <Link
+              to="/admin/results"
+              className="dashboard-action"
+            >
+              View Results
+            </Link>
+          </div>
+        </div>
+
+      </section>
+
+
+      {/* Quick actions */}
+      <section className="dashboard-quick-actions">
+
+        <div className="quick-actions-header">
+          <div>
+            <h2>Quick Actions</h2>
+            <p>
+              Common administrative tasks.
+            </p>
+          </div>
+        </div>
+
+        <div className="quick-actions-list">
+
+          <Link
+            to="/admin/hiring-drives"
+            className="quick-action"
+          >
+            <strong>Create Hiring Drive</strong>
+            <span>
+              Start a new recruitment drive
+            </span>
+          </Link>
+
+          <Link
+            to="/admin/students"
+            className="quick-action"
+          >
+            <strong>Add Students</strong>
+            <span>
+              Register individual or bulk candidates
+            </span>
+          </Link>
+
+          <Link
+            to="/admin/exams/create"
+            className="quick-action"
+          >
+            <strong>Create Exam</strong>
+            <span>
+              Build a new examination
+            </span>
+          </Link>
+
+          <Link
+            to="/admin/question-bank"
+            className="quick-action"
+          >
+            <strong>Question Bank</strong>
+            <span>
+              Manage reusable questions
+            </span>
+          </Link>
+
+        </div>
+
+      </section>
+
     </div>
   );
 }

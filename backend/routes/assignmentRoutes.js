@@ -8,7 +8,7 @@ const {
 const {
   assignExamToStudent,
   getExamAssignments,
-  getMyExams
+  getMyExams, assignExamToBatch, assignExamByScope
 } = require("../controllers/assignmentController");
 
 const router = express.Router();
@@ -19,7 +19,18 @@ router.post(
   authorize("ADMIN"),
   assignExamToStudent
 );
-
+router.post(
+  "/batch",
+  authenticate,
+  authorize("ADMIN"),
+  assignExamToBatch
+);
+router.post(
+  "/scope",
+  authenticate,
+  authorize("ADMIN"),
+  assignExamByScope
+);
 router.get(
   "/exam/:examId",
   authenticate,
@@ -33,5 +44,7 @@ router.get(
   authorize("STUDENT"),
   getMyExams
 );
+
+
 
 module.exports = router;

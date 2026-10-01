@@ -1,79 +1,113 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
+
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
 import StudentDashboard from "./pages/StudentDashboard";
 import Unauthorized from "./pages/Unauthorized";
+
 import AdminStudents from "./pages/AdminStudents";
 import AdminExams from "./pages/AdminExams";
 import AdminQuestions from "./pages/AdminQuestions";
-import TakeExam from "./pages/TakeExam";
 import AdminResults from "./pages/AdminResults";
+import CreateAdmin from "./pages/CreateAdmin";
+import QuestionBank from "./pages/QuestionBank";
+import AdminExamBuilder from "./pages/AdminExamBuilder";
+import AdminHiringDrives from "./pages/AdminHiringDrives";
+import AdminColleges from "./pages/AdminColleges";
+import AdminBatches from "./pages/AdminBatches";
+
+import TakeExam from "./pages/TakeExam";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
+import AdminLayout from "./components/AdminLayout";
 
 function App() {
   return (
     <BrowserRouter>
       <div className="app">
         <Routes>
+
           {/* =========================
               AUTHENTICATION
           ========================= */}
 
-          <Route
-            path="/login"
-            element={<Login />}
-          />
+          <Route path="/login" element={<Login />} />
+
 
           {/* =========================
               ADMIN
           ========================= */}
 
           <Route
-            path="/admin/dashboard"
+            path="/admin"
             element={
               <ProtectedRoute allowedRoles={["ADMIN"]}>
-                <AdminDashboard />
+                <AdminLayout />
               </ProtectedRoute>
             }
-          />
+          >
+            {/* Dashboard */}
+            <Route
+              path="dashboard"
+              element={<AdminDashboard />}
+            />
 
-          <Route
-            path="/admin/students"
-            element={
-              <ProtectedRoute allowedRoles={["ADMIN"]}>
-                <AdminStudents />
-              </ProtectedRoute>
-            }
-          />
+            {/* Hiring */}
+            <Route
+              path="hiring-drives"
+              element={<AdminHiringDrives />}
+            />
 
-          <Route
-            path="/admin/exams"
-            element={
-              <ProtectedRoute allowedRoles={["ADMIN"]}>
-                <AdminExams />
-              </ProtectedRoute>
-            }
-          />
+            {/* Students */}
+            <Route
+              path="students"
+              element={<AdminStudents />}
+            />
+            <Route
+  path="colleges"
+  element={<AdminColleges />}
+/>
 
-          <Route
-            path="/admin/exams/:examId/questions"
-            element={
-              <ProtectedRoute allowedRoles={["ADMIN"]}>
-                <AdminQuestions />
-              </ProtectedRoute>
-            }
-          />
+<Route
+  path="batches"
+  element={<AdminBatches />}
+/>
 
-          <Route
-            path="/admin/results"
-            element={
-              <ProtectedRoute allowedRoles={["ADMIN"]}>
-                <AdminResults />
-              </ProtectedRoute>
-            }
-          />
+            {/* Exams */}
+            <Route
+              path="exams"
+              element={<AdminExams />}
+            />
+
+            <Route
+              path="exams/create"
+              element={<AdminExamBuilder />}
+            />
+
+            <Route
+              path="exams/:examId/questions"
+              element={<AdminQuestions />}
+            />
+
+            <Route
+              path="question-bank"
+              element={<QuestionBank />}
+            />
+
+            {/* Results */}
+            <Route
+              path="results"
+              element={<AdminResults />}
+            />
+
+            {/* Administration */}
+            <Route
+              path="create-admin"
+              element={<CreateAdmin />}
+            />
+          </Route>
+
 
           {/* =========================
               STUDENT
@@ -97,6 +131,7 @@ function App() {
             }
           />
 
+
           {/* =========================
               UNAUTHORIZED
           ========================= */}
@@ -106,6 +141,7 @@ function App() {
             element={<Unauthorized />}
           />
 
+
           {/* =========================
               FALLBACK
           ========================= */}
@@ -114,6 +150,7 @@ function App() {
             path="*"
             element={<Navigate to="/login" replace />}
           />
+
         </Routes>
       </div>
     </BrowserRouter>

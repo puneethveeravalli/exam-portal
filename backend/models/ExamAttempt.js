@@ -34,21 +34,21 @@ const examAttemptSchema = new mongoose.Schema(
       default: null
     },
 
-    answers: [
-      {
-        question: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Question",
-          required: true
-        },
-
-        selectedAnswer: {
-          type: Number,
-          min: 0,
-          max: 3
-        }
-      }
-    ],
+   answers: [
+  {
+    question: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ExamQuestion",
+      required: true
+    },
+    selectedAnswer: {
+      type: Number,
+      min: 0,
+      max: 3,
+      default: null
+    }
+  }
+],
 
     score: {
       type: Number,

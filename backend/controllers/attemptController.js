@@ -1,14 +1,16 @@
 const ExamAttempt = require("../models/ExamAttempt");
 const ExamAssignment = require("../models/ExamAssignment");
 const Exam = require("../models/Exam");
-const Question = require("../models/Question");
+const ExamQuestion = require("../models/ExamQuestion");
+const HiringDriveExam = require("../models/HiringDriveExam");
+
 
 const startExam = async (req, res) => {
   try {
     const studentId = req.user.userId;
     const { examId } = req.params;
 
-    // 1. Check that the exam exists
+    // 1. Check exam
     const exam = await Exam.findById(examId);
 
     if (!exam) {
@@ -17,14 +19,14 @@ const startExam = async (req, res) => {
       });
     }
 
-    // 2. Check that the exam is published
+    // 2. Check published
     if (!exam.isPublished) {
       return res.status(400).json({
         message: "Exam is not published"
       });
     }
 
-    // 3. Check exam start time
+    // 3. Check exam dates
     const now = new Date();
 
     if (now < exam.startDate) {
@@ -33,19 +35,17 @@ const startExam = async (req, res) => {
       });
     }
 
-    // 4. Check exam end time
     if (now > exam.endDate) {
       return res.status(400).json({
         message: "Exam has already ended"
       });
     }
 
-    // 5. Check that this student is assigned
-    const assignment =
-      await ExamAssignment.findOne({
-        exam: examId,
-        student: studentId
-      });
+    // 4. Check assignment
+    const assignment = await ExamAssignment.findOne({
+      exam: examId,
+      student: studentId
+    });
 
     if (!assignment) {
       return res.status(403).json({
@@ -53,76 +53,87 @@ const startExam = async (req, res) => {
       });
     }
 
-    // 6. Check if the student already has an attempt
-    const existingAttempt =
-      await ExamAttempt.findOne({
-        exam: examId,
-        student: studentId
-      });
-
-    if (existingAttempt) {
-      return res.status(409).json({
-        message:
-          "You have already started this exam"
-      });
-    }
-
-    // 7. Get the questions
-    const questions = await Question.find(
-      { exam: examId },
-      {
-        questionText: 1,
-        options: 1,
-        marks: 1
-      }
-    ).sort({
-      createdAt: 1
+    // 5. Check existing attempt
+    let attempt = await ExamAttempt.findOne({
+      exam: examId,
+      student: studentId
     });
 
-    if (questions.length === 0) {
+   if (attempt) {
+  if (
+    attempt.status === "SUBMITTED" ||
+    attempt.status === "AUTO_SUBMITTED"
+  ) {
+    return res.status(400).json({
+      message: "You have already completed this exam"
+    });
+  }
+
+  const existingQuestions = await ExamQuestion.find({
+    exam: examId
+  })
+    .sort({ order: 1 })
+    .select(
+      "_id exam section questionText options marks order"
+    );
+
+  return res.status(200).json({
+    message: "Existing exam attempt found",
+    attempt: {
+      _id: attempt._id,
+      exam: exam,
+      status: attempt.status,
+      startedAt: attempt.startedAt,
+      questions: existingQuestions
+    }
+  });
+}
+
+    // 6. Get fixed exam questions
+    const examQuestions = await ExamQuestion.find({
+      exam: examId
+    })
+      .sort({ order: 1 })
+      .select(
+        "_id exam section questionText options marks order"
+      );
+
+    if (examQuestions.length === 0) {
       return res.status(400).json({
-        message: "Exam has no questions"
+        message: "No questions have been generated for this exam"
       });
     }
 
-    // 8. Create the attempt
-    const attempt = await ExamAttempt.create({
+    // 7. Create empty answers
+    const answers = examQuestions.map((question) => ({
+      question: question._id,
+      selectedAnswer: null
+    }));
+
+    // 8. Create attempt
+    attempt = await ExamAttempt.create({
       exam: examId,
       student: studentId,
       status: "IN_PROGRESS",
-      startedAt: new Date()
+      startedAt: new Date(),
+      answers
     });
 
     res.status(201).json({
-      message: "Exam started successfully",
-
-      attempt: {
-        id: attempt._id,
-        exam: exam._id,
-        startedAt: attempt.startedAt,
-        status: attempt.status
-      },
-
-      exam: {
-        id: exam._id,
-        title: exam.title,
-        description: exam.description,
-        duration: exam.duration,
-        totalMarks: exam.totalMarks,
-        startDate: exam.startDate,
-        endDate: exam.endDate
-      },
-
-      questions
-    });
+  message: "Exam started successfully",
+  attempt: {
+    _id: attempt._id,
+    exam: exam,
+    status: attempt.status,
+    startedAt: attempt.startedAt,
+    questions: examQuestions
+  }
+});
   } catch (error) {
-    console.error(
-      "Start exam error:",
-      error
-    );
+    console.error("Start exam error:", error);
 
     res.status(500).json({
-      message: "Server error"
+      message: "Failed to start exam"
     });
   }
 };
@@ -130,15 +141,7 @@ const submitExam = async (req, res) => {
   try {
     const studentId = req.user.userId;
     const { attemptId } = req.params;
-    const { answers } = req.body;
 
-    if (!Array.isArray(answers)) {
-      return res.status(400).json({
-        message: "Answers must be an array"
-      });
-    }
-
-    // Find the student's attempt
     const attempt = await ExamAttempt.findOne({
       _id: attemptId,
       student: studentId
@@ -150,108 +153,87 @@ const submitExam = async (req, res) => {
       });
     }
 
-    // Prevent submitting twice
-    if (attempt.status === "SUBMITTED") {
-      return res.status(409).json({
+    if (
+      attempt.status === "SUBMITTED" ||
+      attempt.status === "AUTO_SUBMITTED"
+    ) {
+      return res.status(400).json({
         message: "Exam has already been submitted"
       });
     }
 
-    // Get the exam
-    const exam = await Exam.findById(
-      attempt.exam
-    );
-
-    if (!exam) {
-      return res.status(404).json({
-        message: "Exam not found"
-      });
-    }
-
-    // Check exam time
-    const now = new Date();
-
-    const deadline = new Date(
-      attempt.startedAt.getTime() +
-        exam.duration * 60 * 1000
-    );
-const isExpired = now >= deadline;
-    
-    // Get all questions for this exam
-    const questions = await Question.find({
+    const examQuestions = await ExamQuestion.find({
       exam: attempt.exam
     });
 
     let score = 0;
 
-    const submittedAnswers = [];
+    for (const answer of attempt.answers) {
+      if (answer.selectedAnswer === null) {
+        continue;
+      }
 
-    for (const answer of answers) {
-      const question = questions.find(
+      const question = examQuestions.find(
         (item) =>
-          item._id.toString() ===
-          answer.question
+          item._id.toString() === answer.question.toString()
       );
 
       if (!question) {
         continue;
       }
 
-      const selectedAnswer =
-        Number(answer.selectedAnswer);
-
-      submittedAnswers.push({
-        question: question._id,
-        selectedAnswer
-      });
-
-      if (
-        selectedAnswer ===
-        question.correctAnswer
-      ) {
+      if (answer.selectedAnswer === question.correctAnswer) {
         score += question.marks;
       }
     }
 
-    // Update attempt
-    attempt.answers = submittedAnswers;
     attempt.score = score;
-    attempt.status = isExpired ? "AUTO_SUBMITTED" : "SUBMITTED";
-    attempt.submittedAt = now;
+    attempt.status = "SUBMITTED";
+    attempt.submittedAt = new Date();
 
     await attempt.save();
 
-    res.json({
-      message: "Exam submitted successfully",
-
-      result: {
-        attemptId: attempt._id,
-        score: attempt.score,
-        totalMarks: exam.totalMarks,
-        submittedAt: attempt.submittedAt,
-        status: attempt.status
-      }
-    });
+  res.status(200).json({
+  message: "Exam submitted successfully",
+  result: {
+    attemptId: attempt._id,
+    status: attempt.status,
+    score,
+    totalMarks: examQuestions.reduce(
+      (total, question) =>
+        total + question.marks,
+      0
+    ),
+    submittedAt: attempt.submittedAt
+  }
+});
   } catch (error) {
-    console.error(
-      "Submit exam error:",
-      error
-    );
-     res.status(500).json({
-      message: "Server error"
+    console.error("Submit exam error:", error);
+
+    res.status(500).json({
+      message: "Failed to submit exam"
     });
-   }
+  }
 };
 
-    const saveAnswers = async (req, res) => {
+  const saveAnswers = async (req, res) => {
   try {
     const studentId = req.user.userId;
     const { attemptId } = req.params;
-    const { answers } = req.body;
+    const { questionId, selectedAnswer } = req.body;
 
-    if (!Array.isArray(answers)) {
+    if (!questionId) {
       return res.status(400).json({
-        message: "Answers must be an array"
+        message: "questionId is required"
+      });
+    }
+
+    if (
+      selectedAnswer !== null &&
+      (selectedAnswer < 0 || selectedAnswer > 3)
+    ) {
+      return res.status(400).json({
+        message: "Invalid answer option"
       });
     }
 
@@ -268,85 +250,50 @@ const isExpired = now >= deadline;
 
     if (attempt.status !== "IN_PROGRESS") {
       return res.status(400).json({
-        message: "Exam is no longer in progress"
+        message: "This exam attempt is no longer active"
       });
     }
 
-    const exam = await Exam.findById(
-      attempt.exam
-    );
-
-    if (!exam) {
-      return res.status(404).json({
-        message: "Exam not found"
-      });
-    }
-
-    const now = new Date();
-
-    const deadline =
-      new Date(attempt.startedAt).getTime() +
-      exam.duration * 60 * 1000;
-
-    if (now >= deadline) {
-      return res.status(400).json({
-        message: "Exam time has expired"
-      });
-    }
-
-    const questions = await Question.find({
+    // Make sure question belongs to this exam
+    const examQuestion = await ExamQuestion.findOne({
+      _id: questionId,
       exam: attempt.exam
     });
 
-    const validAnswers = [];
-
-    for (const answer of answers) {
-      const question = questions.find(
-        (item) =>
-          item._id.toString() ===
-          answer.question
-      );
-
-      if (!question) {
-        continue;
-      }
-
-      const selectedAnswer =
-        Number(answer.selectedAnswer);
-
-      if (
-        selectedAnswer < 0 ||
-        selectedAnswer > 3
-      ) {
-        continue;
-      }
-
-      validAnswers.push({
-        question: question._id,
-        selectedAnswer
+    if (!examQuestion) {
+      return res.status(400).json({
+        message: "Question does not belong to this exam"
       });
     }
 
-    attempt.answers = validAnswers;
+    const answerIndex = attempt.answers.findIndex(
+      (answer) =>
+        answer.question.toString() === questionId.toString()
+    );
+
+    if (answerIndex === -1) {
+      return res.status(400).json({
+        message: "Question is not part of this attempt"
+      });
+    }
+
+    attempt.answers[answerIndex].selectedAnswer =
+      selectedAnswer;
 
     await attempt.save();
 
-    res.json({
-      message: "Answers saved successfully",
-      answers: attempt.answers
+    res.status(200).json({
+      message: "Answer saved successfully"
     });
   } catch (error) {
-    console.error(
-      "Save answers error:",
-      error
-    );
+    console.error("Save answer error:", error);
 
     res.status(500).json({
-      message: "Server error"
+      message: "Failed to save answer"
     });
   }
 };
-  const getAttempt = async (req, res) => {
+const getAttempt = async (req, res) => {
   try {
     const studentId = req.user.userId;
     const { attemptId } = req.params;
@@ -354,10 +301,15 @@ const isExpired = now >= deadline;
     const attempt = await ExamAttempt.findOne({
       _id: attemptId,
       student: studentId
-    }).populate(
-      "exam",
-      "title duration totalMarks startDate endDate"
-    );
+    })
+      .populate(
+        "exam",
+        "title description duration totalMarks startDate endDate"
+      )
+      .populate({
+        path: "answers.question",
+        select: "_id section questionText options marks order"
+      });
 
     if (!attempt) {
       return res.status(404).json({
@@ -365,20 +317,26 @@ const isExpired = now >= deadline;
       });
     }
 
-    res.json({
-      attempt
+    const examQuestions = await ExamQuestion.find({
+      exam: attempt.exam._id
+    })
+      .sort({ order: 1 })
+      .select(
+        "_id exam section questionText options marks order"
+      );
+
+    res.status(200).json({
+      attempt,
+      questions: examQuestions
     });
   } catch (error) {
-    console.error(
-      "Get attempt error:",
-      error
-    );
+    console.error("Get attempt error:", error);
 
     res.status(500).json({
-      message: "Server error"
+      message: "Failed to fetch exam attempt"
     });
   }
-}; 
+};
     const getMyAttempts = async (req, res) => {
   try {
     const studentId = req.user.userId;
@@ -426,18 +384,81 @@ const getAllAttempts = async (req, res) => {
     })
       .populate(
         "student",
-        "name email username"
+        "name email username college batch branch"
       )
       .populate(
         "exam",
-        "title totalMarks duration"
+        "title description totalMarks duration startDate endDate"
       )
       .sort({
         submittedAt: -1
       });
 
+    // Get all exams present in the results
+    const examIds = attempts
+      .map((attempt) => attempt.exam?._id)
+      .filter(Boolean);
+
+    // Find which hiring drives contain these exams
+    const driveExams =
+      await HiringDriveExam.find({
+        exam: {
+          $in: examIds
+        },
+        isActive: true
+      }).populate(
+        "hiringDrive",
+        "name companyName startDate endDate status"
+      );
+
+    // Map exam ID -> hiring drives
+    const driveMap = new Map();
+
+    driveExams.forEach((driveExam) => {
+      if (!driveExam.hiringDrive) {
+        return;
+      }
+
+      const examId =
+        driveExam.exam.toString();
+
+      if (!driveMap.has(examId)) {
+        driveMap.set(examId, []);
+      }
+
+      driveMap.get(examId).push(
+        driveExam.hiringDrive
+      );
+    });
+
+    const formattedAttempts =
+      attempts.map((attempt) => ({
+        _id: attempt._id,
+
+        status: attempt.status,
+
+        score: attempt.score || 0,
+
+        startedAt: attempt.startedAt,
+
+        submittedAt:
+          attempt.submittedAt,
+
+        violationCount:
+          attempt.violationCount || 0,
+
+        student: attempt.student,
+
+        exam: attempt.exam,
+
+        hiringDrives:
+          driveMap.get(
+            attempt.exam?._id?.toString()
+          ) || []
+      }));
+
     res.json({
-      attempts
+      attempts: formattedAttempts
     });
   } catch (error) {
     console.error(
@@ -447,6 +468,115 @@ const getAllAttempts = async (req, res) => {
 
     res.status(500).json({
       message: "Server error"
+    });
+  }
+};
+const getAdminAttemptDetails = async (req, res) => {
+  try {
+    const { attemptId } = req.params;
+
+    const attempt = await ExamAttempt.findById(attemptId)
+      .populate({
+        path: "student",
+        select: "name email username college batch branch",
+        populate: [
+          {
+            path: "college",
+            select: "name code location"
+          },
+          {
+            path: "batch",
+            select: "name year"
+          }
+        ]
+      })
+      .populate({
+        path: "exam",
+        select: "title description duration totalMarks startDate endDate"
+      })
+      .populate({
+        path: "answers.question",
+        select:
+          "_id questionText options correctAnswer marks section order",
+        populate: {
+          path: "section",
+          select: "_id name category marksPerQuestion"
+        }
+      });
+
+    if (!attempt) {
+      return res.status(404).json({
+        message: "Exam attempt not found"
+      });
+    }
+
+    // Find the hiring drive connected to this exam
+    const hiringDriveExam = await HiringDriveExam.findOne({
+      exam: attempt.exam?._id,
+      isActive: true
+    }).populate({
+      path: "hiringDrive",
+      select: "name companyName description startDate endDate status"
+    });
+
+    const questionResults = attempt.answers.map((answer) => {
+      const question = answer.question;
+
+      if (!question) {
+        return {
+          questionId: answer.question,
+          questionText: "Question unavailable",
+          options: [],
+          correctAnswer: null,
+          selectedAnswer: answer.selectedAnswer,
+          marks: 0,
+          isCorrect: false,
+          section: null
+        };
+      }
+
+      const isAnswered = answer.selectedAnswer !== null;
+
+      const isCorrect =
+        isAnswered &&
+        answer.selectedAnswer === question.correctAnswer;
+
+      return {
+        questionId: question._id,
+        questionText: question.questionText,
+        options: question.options,
+        correctAnswer: question.correctAnswer,
+        selectedAnswer: answer.selectedAnswer,
+        marks: question.marks,
+        isCorrect,
+        section: question.section
+          ? {
+              _id: question.section._id,
+              name: question.section.name,
+              category: question.section.category,
+              marksPerQuestion: question.section.marksPerQuestion
+            }
+          : null,
+        order: question.order
+      };
+    });
+
+    const totalMarks = questionResults.reduce(
+      (total, question) => total + (question.marks || 0),
+      0
+    );
+
+    res.status(200).json({
+      attempt,
+      hiringDrive: hiringDriveExam?.hiringDrive || null,
+      totalMarks,
+      questionResults
+    });
+  } catch (error) {
+    console.error("Get admin attempt details error:", error);
+
+    res.status(500).json({
+      message: "Failed to fetch result details"
     });
   }
 };
@@ -488,20 +618,48 @@ const recordProctoringEvent = async (req, res) => {
 
     const MAX_VIOLATIONS = 5;
 
-    if (attempt.violationCount > MAX_VIOLATIONS) {
-      attempt.status = "AUTO_SUBMITTED";
-      attempt.submittedAt = new Date();
+if (attempt.violationCount > MAX_VIOLATIONS) {
+  // Calculate score before auto-submitting
+  const examQuestions = await ExamQuestion.find({
+    exam: attempt.exam
+  });
 
-      await attempt.save();
+  let score = 0;
 
-      return res.json({
-        message:
-          "Maximum security violations exceeded. Exam automatically submitted.",
-        violationCount:
-          attempt.violationCount,
-        autoSubmitted: true
-      });
+  for (const answer of attempt.answers) {
+    if (answer.selectedAnswer === null) {
+      continue;
     }
+
+    const question = examQuestions.find(
+      (item) =>
+        item._id.toString() === answer.question.toString()
+    );
+
+    if (!question) {
+      continue;
+    }
+
+    if (answer.selectedAnswer === question.correctAnswer) {
+      score += question.marks;
+    }
+  }
+
+  attempt.score = score;
+  attempt.status = "AUTO_SUBMITTED";
+  attempt.submittedAt = new Date();
+
+  await attempt.save();
+
+  return res.json({
+  message:
+    "Maximum security violations exceeded. Exam automatically submitted.",
+  violationCount: attempt.violationCount,
+  score,
+  submittedAt: attempt.submittedAt,
+  autoSubmitted: true
+});
+}
 
     await attempt.save();
 
@@ -527,10 +685,11 @@ const recordProctoringEvent = async (req, res) => {
 };
 module.exports = {
   startExam,
-  submitExam, 
+  submitExam,
   saveAnswers,
   getAttempt,
   recordProctoringEvent,
   getMyAttempts,
-  getAllAttempts
+  getAllAttempts,
+  getAdminAttemptDetails
 };

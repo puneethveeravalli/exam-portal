@@ -9,6 +9,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -55,156 +56,228 @@ function Login() {
   };
 
   return (
-    <main className="login-page">
-      <section className="login-container">
-        <div className="login-card ep-card ep-frame">
+    <div className="login-page">
+      <a className="login-skip" href="#main-content">
+        Skip to main content
+      </a>
 
-          {/* Brand */}
-
-          <div
-            className="login-brand ep-reveal"
-            style={{ "--i": 0 }}
-          >
-            <div className="login-brand-mark" aria-hidden="true">
-              EP
-            </div>
-
-            <div className="login-brand-text">
-              <span className="login-brand-name">
-                Exam Portal
-              </span>
-
-              <span className="login-brand-caption">
-                Examination Management System
-              </span>
-            </div>
-          </div>
-
-          {/* Heading */}
-
-          <div
-            className="login-heading ep-reveal"
-            style={{ "--i": 1 }}
-          >
-            <h1 className="ep-display login-title">
-              Welcome <em>back</em>
-            </h1>
-
-            <p>
-              Sign in to continue to your examination
-              portal.
-            </p>
-          </div>
-
-          {/* Form */}
-
-          <form
-            className="login-form ep-reveal"
-            style={{ "--i": 2 }}
-            onSubmit={handleLogin}
-            noValidate
-          >
-            <div className="ep-field">
-              <label className="ep-label" htmlFor="username">
-                Username
-              </label>
-
-              <input
-                id="username"
-                className="ep-input"
-                type="text"
-                value={username}
-                onChange={(event) =>
-                  setUsername(event.target.value)
-                }
-                placeholder="Enter your username"
-                autoComplete="username"
-                disabled={loading}
-              />
-            </div>
-
-            <div className="ep-field">
-              <label className="ep-label" htmlFor="password">
-                Password
-              </label>
-
-              <input
-                id="password"
-                className="ep-input"
-                type="password"
-                value={password}
-                onChange={(event) =>
-                  setPassword(event.target.value)
-                }
-                placeholder="Enter your password"
-                autoComplete="current-password"
-                disabled={loading}
-              />
-            </div>
-
-            {error && (
-              <div
-                className="ep-alert ep-alert--danger"
-                role="alert"
-              >
-                <svg
-                  className="ep-alert__icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-                  <circle cx="12" cy="12" r="9" />
-                  <path d="M12 7.5v5.5" />
-                  <path d="M12 16.5h.01" />
-                </svg>
-
-                <span>{error}</span>
+      <main className="login-main" id="main-content" tabIndex={-1}>
+        <div className="login-shell">
+          {/* LEFT BRAND PANEL */}
+          <section className="login-brand-panel">
+            <div className="login-brand-top">
+              <div className="login-brand-mark" aria-hidden="true">
+                EP
               </div>
-            )}
 
-            <button
-              type="submit"
-              className="ep-btn ep-btn--primary ep-btn--block login-submit"
-              disabled={loading}
+              <div className="login-brand-text">
+                <span className="login-brand-name">
+                  Exam Portal
+                </span>
+
+                <span className="login-brand-caption">
+                  Examination Management System
+                </span>
+              </div>
+            </div>
+
+            <div className="login-brand-content">
+              <span className="login-brand-eyebrow">
+                SECURE EXAMINATION PLATFORM
+              </span>
+
+              <h1>
+                Manage examinations.
+                <br />
+                Conduct assessments.
+                <br />
+                Track results.
+              </h1>
+
+              <p>
+                A centralized platform for managing hiring drives,
+                examinations, candidates, question banks and assessment
+                results.
+              </p>
+            </div>
+
+            <div className="login-brand-footer">
+              <span className="login-security-dot" />
+              Authorized users only
+            </div>
+          </section>
+
+          {/* LOGIN CARD */}
+          <section className="login-card">
+            <div className="login-card-header">
+              <span className="login-section-label">
+                ACCOUNT ACCESS
+              </span>
+
+              <h2>Sign in</h2>
+
+              <p>
+                Enter your credentials to access the examination
+                platform.
+              </p>
+            </div>
+
+            <form
+              className="login-form"
+              onSubmit={handleLogin}
+              noValidate
+              aria-label="Sign in"
             >
-              {loading ? (
-                <>
-                  <span className="ep-spinner" aria-hidden="true"></span>
-                  Signing in...
-                </>
-              ) : (
-                "Sign in"
+              <div className="login-field">
+                <label htmlFor="username">
+                  Username
+                </label>
+
+                <input
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(event) =>
+                    setUsername(event.target.value)
+                  }
+                  autoComplete="username"
+                  disabled={loading}
+                  aria-invalid={Boolean(error)}
+                  aria-describedby={
+                    error ? "login-error" : undefined
+                  }
+                  placeholder="Enter your username"
+                />
+              </div>
+
+              <div className="login-field">
+                <label htmlFor="password">
+                  Password
+                </label>
+
+                <div className="login-password">
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(event) =>
+                      setPassword(event.target.value)
+                    }
+                    autoComplete="current-password"
+                    disabled={loading}
+                    aria-invalid={Boolean(error)}
+                    aria-describedby={
+                      error ? "login-error" : undefined
+                    }
+                    placeholder="Enter your password"
+                  />
+
+                  <button
+                    type="button"
+                    className="login-eye"
+                    onClick={() =>
+                      setShowPassword((value) => !value)
+                    }
+                    aria-label={
+                      showPassword
+                        ? "Hide password"
+                        : "Show password"
+                    }
+                    aria-pressed={showPassword}
+                    disabled={loading}
+                  >
+                    {showPassword ? (
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.7"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M3 3l18 18" />
+                        <path d="M10.6 6.1A9.7 9.7 0 0 1 12 6c5 0 8.5 4 9.5 6a12.7 12.7 0 0 1-2.6 3.3" />
+                        <path d="M6.6 7.7A12.7 12.7 0 0 0 2.5 12c1 2 4.5 6 9.5 6 1.4 0 2.7-.3 3.8-.8" />
+                        <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
+                      </svg>
+                    ) : (
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.7"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M2.5 12C3.5 10 7 6 12 6s8.5 4 9.5 6c-1 2-4.5 6-9.5 6s-8.5-4-9.5-6Z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {error && (
+                <div
+                  className="login-error"
+                  id="login-error"
+                  role="alert"
+                >
+                  <span className="login-error-icon">
+                    !
+                  </span>
+
+                  <span>{error}</span>
+                </div>
               )}
-            </button>
-          </form>
 
-          {/* Footer */}
+              <button
+                type="submit"
+                className="login-submit"
+                disabled={loading}
+                aria-busy={loading}
+              >
+                {loading ? (
+                  <>
+                    <span
+                      className="login-spinner"
+                      aria-hidden="true"
+                    />
+                    Signing in...
+                  </>
+                ) : (
+                  <>
+                    Sign in
+                    <span className="login-submit-arrow">
+                      →
+                    </span>
+                  </>
+                )}
+              </button>
 
-          <div
-            className="login-footer ep-reveal"
-            style={{ "--i": 3 }}
-          >
-            <span>Authorized access only</span>
+              <span
+                className="login-sr-only"
+                role="status"
+              >
+                {loading
+                  ? "Signing in, please wait."
+                  : ""}
+              </span>
+            </form>
 
-            <span className="login-footer-divider" aria-hidden="true"></span>
-
-            <span className="login-footer-status">
-              <span className="ep-live-dot" aria-hidden="true"></span>
-              Secure examination environment
-            </span>
-          </div>
-
+            <div className="login-card-footer">
+              <span>Exam Portal</span>
+              <span className="login-footer-separator">
+                •
+              </span>
+              <span>Authorized access only</span>
+            </div>
+          </section>
         </div>
-
-        <p className="login-copyright ep-caption">
-          Exam Portal
-        </p>
-      </section>
-    </main>
+      </main>
+    </div>
   );
 }
 

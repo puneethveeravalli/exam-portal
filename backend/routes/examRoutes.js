@@ -7,7 +7,7 @@ const {
 
 const {
   createExam,  getExams,
-   updateExamPublishStatus
+   updateExamPublishStatus, updateExam
 } = require("../controllers/examController");
 
 const router = express.Router();
@@ -18,6 +18,13 @@ router.post(
   authorize("ADMIN"),
   createExam
 );
+router.patch(
+  "/:examId",
+  authenticate,
+  authorize("ADMIN"),
+  updateExam
+);
+
 router.get(
   "/",
   authenticate,

@@ -20,12 +20,26 @@ function TakeExam() {
 
   const { user } = useAuth();
 
-  const examData = location.state;
+ const examData = location.state;
 
-  const attempt = examData?.attempt;
-  const exam = examData?.exam;
-  const questions = examData?.questions || [];
+const attempt = examData?.attempt;
 
+const attemptId =
+  attempt?._id || attemptId || null;
+
+const exam =
+  examData?.exam ||
+  (
+    attempt?.exam &&
+    typeof attempt.exam === "object"
+      ? attempt.exam
+      : null
+  );
+
+const [questions, setQuestions] = useState(
+  examData?.questions || attempt?.questions || []
+);
+  
   // ----------------------------------------
   // STUDENT WATERMARK
   // ----------------------------------------
@@ -603,41 +617,51 @@ const stopCamera = () => {
   if (streamRef.current) {
     streamRef.current
       .getTracks()
-      .forEach((track) =>
-        track.stop()
-      );
+      .forEach((track) => track.stop());
 
     streamRef.current = null;
   }
 
-  // Stop face detection
-  if (
-    faceAnimationRef.current
-  ) {
+  // Stop face monitoring
+  if (faceAnimationRef.current) {
     cancelAnimationFrame(
       faceAnimationRef.current
     );
 
-    faceAnimationRef.current =
-      null;
+    faceAnimationRef.current = null;
   }
 
-  // Stop microphone
+  // Close MediaPipe face landmarker
+  if (
+    faceLandmarkerRef.current &&
+    typeof faceLandmarkerRef.current.close === "function"
+  ) {
+    try {
+      faceLandmarkerRef.current.close();
+    } catch (error) {
+      console.warn(
+        "Failed to close face landmarker:",
+        error
+      );
+    }
+  }
+
+  faceLandmarkerRef.current = null;
+
+  // Stop microphone monitoring
   if (audioAnimationRef.current) {
     cancelAnimationFrame(
       audioAnimationRef.current
     );
 
-    audioAnimationRef.current =
-      null;
+    audioAnimationRef.current = null;
   }
 
+  // Stop microphone stream
   if (audioStreamRef.current) {
     audioStreamRef.current
       .getTracks()
-      .forEach((track) =>
-        track.stop()
-      );
+      .forEach((track) => track.stop());
 
     audioStreamRef.current = null;
   }
@@ -648,22 +672,35 @@ const stopCamera = () => {
       .close()
       .catch(() => {});
 
-    audioContextRef.current =
-      null;
+    audioContextRef.current = null;
   }
 
-  analyserRef.current =
-    null;
+  analyserRef.current = null;
+  voiceStartedAtRef.current = null;
 
-  voiceStartedAtRef.current =
-    null;
-
+  // Detach video stream
   if (videoRef.current) {
-    videoRef.current.srcObject =
-      null;
+    videoRef.current.srcObject = null;
   }
 };
+  const cleanupExamEnvironment = async () => {
+  // Stop camera, microphone and monitoring
+  stopCamera();
 
+  // Exit fullscreen
+  if (document.fullscreenElement) {
+    try {
+      await document.exitFullscreen();
+    } catch (error) {
+      console.warn(
+        "Failed to exit fullscreen:",
+        error
+      );
+    }
+  }
+
+  setIsFullscreen(false);
+};
   // ----------------------------------------
   // REGISTER VIOLATION
   // ----------------------------------------
@@ -675,7 +712,7 @@ const stopCamera = () => {
     if (
       securityLocked ||
       result ||
-      !attempt?.id
+      !attemptId
     ) {
       return;
     }
@@ -701,7 +738,7 @@ const stopCamera = () => {
     try {
       const response =
         await api.post(
-          `/attempts/${attempt.id}/proctoring-event`,
+          `/attempts/${attemptId}/proctoring-event`,
           {
             type,
             message,
@@ -714,23 +751,32 @@ const stopCamera = () => {
 
       setViolationCount(count);
 
-      if (
-        response.data.autoSubmitted
-      ) {
-        setSecurityLocked(true);
+     if (response.data.autoSubmitted) {
+  setSecurityLocked(true);
 
-        setViolationModal({
-          title:
-            "Exam Automatically Submitted",
-          message:
-            "The maximum number of security violations was reached. Your examination has been automatically submitted.",
-          type: "auto-submit",
-        });
+  // The backend has already changed the attempt
+  // to AUTO_SUBMITTED, so DO NOT call /submit again.
 
-        await forceSubmitExam();
+  await cleanupExamEnvironment();
 
-        return;
-      }
+  setResult({
+    status: "AUTO_SUBMITTED",
+    score: response.data.score ?? 0,
+    submittedAt:
+      response.data.submittedAt ||
+      new Date().toISOString(),
+  });
+
+  setViolationModal({
+    title:
+      "Exam Automatically Submitted",
+    message:
+      "The maximum number of security violations was reached. Your examination has been automatically submitted.",
+    type: "auto-submit",
+  });
+
+  return;
+}
 
       setViolationModal({
         title: "Security Warning",
@@ -754,7 +800,7 @@ const stopCamera = () => {
     if (
       submitting ||
       result ||
-      !attempt?.id
+      !attemptId
     ) {
       return;
     }
@@ -762,27 +808,9 @@ const stopCamera = () => {
     try {
       setSubmitting(true);
 
-      const formattedAnswers =
-        Object.entries(
-          answers
-        ).map(
-          ([
-            questionId,
-            selectedAnswer,
-          ]) => ({
-            question: questionId,
-            selectedAnswer,
-          })
-        );
-
-      const response =
-        await api.post(
-          `/attempts/${attempt.id}/submit`,
-          {
-            answers:
-              formattedAnswers,
-          }
-        );
+      const response = await api.post(
+  `/attempts/${attemptId}/submit`
+);
 
       setResult(
         response.data.result
@@ -1077,94 +1105,98 @@ const stopCamera = () => {
   // LOAD SAVED ANSWERS
   // ----------------------------------------
 
-  useEffect(() => {
-    if (!attempt?.id) {
-      return;
-    }
+ useEffect(() => {
+  if (!attemptId) {
+    return;
+  }
 
-    const loadSavedAnswers =
-      async () => {
-        try {
-          const response =
-            await api.get(
-              `/attempts/${attempt.id}`
-            );
+  const loadSavedAnswers = async () => {
+    try {
+      const response = await api.get(
+        `/attempts/${attemptId}`
+      );
 
-          const savedAnswers =
-            response.data.attempt
-              .answers || [];
+      const attemptData =
+        response.data.attempt || response.data;
 
-          const restoredAnswers =
-            {};
+      const savedAnswers =
+        attemptData.answers || [];
 
-          savedAnswers.forEach(
-            (answer) => {
-              restoredAnswers[
-                answer.question
-              ] =
-                answer.selectedAnswer;
-            }
-          );
+      const restoredAnswers = {};
 
-          setAnswers(
-            restoredAnswers
-          );
+      savedAnswers.forEach((answer) => {
+        const questionId =
+          typeof answer.question === "object"
+            ? answer.question._id
+            : answer.question;
 
-          setViolationCount(
-            response.data.attempt
-              .violationCount || 0
-          );
-        } catch (error) {
-          console.error(
-            "Load saved answers error:",
-            error
-          );
+        if (
+          questionId &&
+          answer.selectedAnswer !== null &&
+          answer.selectedAnswer !== undefined
+        ) {
+          restoredAnswers[questionId] =
+            answer.selectedAnswer;
         }
-      };
+      });
 
-    loadSavedAnswers();
-  }, [attempt?.id]);
+      setAnswers(restoredAnswers);
+
+      setViolationCount(
+        attemptData.violationCount || 0
+      );
+
+      if (
+        response.data.questions &&
+        response.data.questions.length > 0
+      ) {
+        setQuestions(
+          response.data.questions
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Load saved answers error:",
+        error
+      );
+    }
+  };
+
+  loadSavedAnswers();
+}, [attemptId]);
 
   // ----------------------------------------
   // TIMER
   // ----------------------------------------
 
   useEffect(() => {
-    if (!examDeadline) {
+  if (!examDeadline || result) {
+    return;
+  }
+
+  const updateTimer = () => {
+    const remaining =
+      examDeadline - Date.now();
+
+    if (remaining <= 0) {
+      setTimeRemaining(0);
       return;
     }
 
-    const updateTimer =
-      () => {
-        const remaining =
-          examDeadline -
-          Date.now();
+    setTimeRemaining(remaining);
+  };
 
-        if (
-          remaining <= 0
-        ) {
-          setTimeRemaining(0);
+  updateTimer();
 
-          return;
-        }
+  const timer = setInterval(
+    updateTimer,
+    1000
+  );
 
-        setTimeRemaining(
-          remaining
-        );
-      };
-
-    updateTimer();
-
-    const timer =
-      setInterval(
-        updateTimer,
-        1000
-      );
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [examDeadline]);
+  return () => {
+    clearInterval(timer);
+  };
+}, [examDeadline, result]);
 
   // ----------------------------------------
   // AUTO SUBMIT TIMER
@@ -1215,40 +1247,14 @@ const stopCamera = () => {
         setSubmitting(true);
         setSubmitError("");
 
-        const formattedAnswers =
-          Object.entries(
-            answers
-          ).map(
-            ([
-              questionId,
-              selectedAnswer,
-            ]) => ({
-              question:
-                questionId,
-              selectedAnswer,
-            })
-          );
-
-        const response =
-          await api.post(
-            `/attempts/${attempt.id}/submit`,
-            {
-              answers:
-                formattedAnswers,
-            }
-          );
+        const response = await api.post(
+  `/attempts/${attemptId}/submit`
+);
 
         setResult(
           response.data.result
         );
-
-        stopCamera();
-
-        if (
-          document.fullscreenElement
-        ) {
-          await document.exitFullscreen();
-        }
+       await cleanupExamEnvironment();
       } catch (error) {
         console.error(
           "Submit exam error:",
@@ -1275,54 +1281,40 @@ const stopCamera = () => {
   // ANSWER CHANGE
   // ----------------------------------------
 
-  const handleAnswerChange =
-    async (
-      answerIndex
-    ) => {
-      const question =
-        questions[
-          currentQuestion
-        ];
+ const handleAnswerChange = async (answerIndex) => {
+  const question = questions[currentQuestion];
 
-      const updatedAnswers = {
-        ...answers,
-        [question._id]:
-          answerIndex,
-      };
+  if (!question) {
+    return;
+  }
 
-      setAnswers(
-        updatedAnswers
-      );
+  const questionId = question._id;
 
-      try {
-        const formattedAnswers =
-          Object.entries(
-            updatedAnswers
-          ).map(
-            ([
-              questionId,
-              selectedAnswer,
-            ]) => ({
-              question:
-                questionId,
-              selectedAnswer,
-            })
-          );
+  setAnswers((previous) => ({
+    ...previous,
+    [questionId]: answerIndex,
+  }));
 
-        await api.patch(
-          `/attempts/${attempt.id}/answers`,
-          {
-            answers:
-              formattedAnswers,
-          }
-        );
-      } catch (error) {
-        console.error(
-          "Save answer error:",
-          error
-        );
+  try {
+    await api.patch(
+      `/attempts/${attemptId}/answers`,
+      {
+        questionId,
+        selectedAnswer: answerIndex,
       }
-    };
+    );
+  } catch (error) {
+    console.error(
+      "Save answer error:",
+      error
+    );
+
+    setSubmitError(
+      error.response?.data?.message ||
+        "Failed to save answer"
+    );
+  }
+};
 
   // ----------------------------------------
   // NO EXAM DATA
@@ -1354,6 +1346,19 @@ const stopCamera = () => {
       </div>
     );
   }
+  if (!exam) {
+  return (
+    <div className="exam-error-page">
+      <div className="exam-error-card">
+        <h1>Loading Exam...</h1>
+
+        <p>
+          Preparing your examination environment.
+        </p>
+      </div>
+    </div>
+  );
+}
 
   // ----------------------------------------
   // RESULT
@@ -1581,11 +1586,13 @@ const stopCamera = () => {
       currentQuestion
     ];
 
-  const answeredCount =
-    Object.keys(
-      answers
-    ).length;
-
+ const answeredCount = Object.values(
+  answers
+).filter(
+  (answer) =>
+    answer !== null &&
+    answer !== undefined
+).length;
   const progress =
     questions.length > 0
       ? ((currentQuestion + 1) /
@@ -1840,7 +1847,7 @@ const stopCamera = () => {
           <div className="question-card">
             <div className="question-top">
               <span className="question-number">
-                QUESTION{" "}
+                {" "}
                 {String(
                   currentQuestion + 1
                 ).padStart(2, "0")}
@@ -1942,11 +1949,10 @@ const stopCamera = () => {
             </button>
 
             <span className="answer-status">
-              {answers[
-                question._id
-              ] !== undefined
-                ? "Answer saved"
-                : "Not answered"}
+              {answers[question._id] !== undefined &&
+answers[question._id] !== null
+  ? "Answer saved"
+  : "Not answered"}
             </span>
 
             <button
@@ -2152,7 +2158,7 @@ const stopCamera = () => {
 
         <span>
           Attempt ID:{" "}
-          {attempt.id}
+          {attemptId}
         </span>
       </footer>
     </div>

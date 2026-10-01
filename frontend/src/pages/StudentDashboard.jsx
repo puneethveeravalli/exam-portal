@@ -269,7 +269,11 @@ function StudentDashboard() {
                           ? "Published"
                           : "Not Published"}
                       </span>
-
+                      {assignment.attemptStatus === "IN_PROGRESS" && (
+  <span className="status-badge in-progress">
+    In Progress
+  </span>
+)}
                     </div>
 
                     <div className="exam-card-content">
@@ -328,17 +332,20 @@ function StudentDashboard() {
                     <div className="exam-card-footer">
 
                       {exam.isPublished ? (
-                        <button
-                          type="button"
-                          className="start-exam-button"
-                          onClick={() =>
-                            handleStartExam(exam._id)
-                          }
-                        >
-                          Start Exam
-                          <span>→</span>
-                        </button>
-                      ) : (
+  <button
+    type="button"
+    className="start-exam-button"
+    onClick={() =>
+      handleStartExam(exam._id)
+    }
+  >
+    {assignment.attemptStatus === "IN_PROGRESS"
+      ? "Resume Exam"
+      : "Start Exam"}
+
+    <span>→</span>
+  </button>
+) : (
                         <button
                           type="button"
                           className="disabled-exam-button"
@@ -433,7 +440,7 @@ function StudentDashboard() {
 
                 <article
                   key={result._id}
-                  className="result-card"
+                  className="results-card"
                 >
 
                   <div className="result-main">

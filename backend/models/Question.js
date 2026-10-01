@@ -2,10 +2,13 @@ const mongoose = require("mongoose");
 
 const questionSchema = new mongoose.Schema(
   {
+    // Existing field.
+    // Kept temporarily so current exam/question functionality
+    // continues to work.
     exam: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Exam",
-      required: true
+      default: null
     },
 
     questionText: {
@@ -32,10 +35,31 @@ const questionSchema = new mongoose.Schema(
       max: 3
     },
 
+    // Keep this for existing questions.
+    // For Question Bank questions, marks will eventually
+    // be determined by the exam section.
     marks: {
       type: Number,
-      required: true,
+      default: 1,
       min: 1
+    },
+
+    // Question Bank information
+    category: {
+      type: String,
+      required: true,
+      trim: true
+    },
+
+    difficulty: {
+      type: String,
+      enum: ["EASY", "MEDIUM", "HARD"],
+      default: "MEDIUM"
+    },
+
+    isActive: {
+      type: Boolean,
+      default: true
     }
   },
   {

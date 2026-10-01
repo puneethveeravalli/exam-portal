@@ -38,7 +38,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-     plainPassword: {
+
+    plainPassword: {
       type: String,
       default: null
     },
@@ -52,6 +53,25 @@ const userSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true
+    },
+
+    // Organization details for students
+    college: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "College",
+      default: null
+    },
+
+    batch: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Batch",
+      default: null
+    },
+
+    branch: {
+      type: String,
+      trim: true,
+      default: null
     }
   },
   { timestamps: true }
