@@ -1,0 +1,1297 @@
+/* =========================================================
+   HIRING DRIVES PAGE
+========================================================= */
+
+.hiring-page {
+  min-height: 100vh;
+  padding: 32px;
+  background: #f5f7fb;
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.hiring-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.hiring-eyebrow {
+  display: block;
+  margin-bottom: 7px;
+  color: #1f4fd1;
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+}
+
+.hiring-page-header h1 {
+  margin: 0;
+  color: #172033;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.hiring-page-header p {
+  margin: 8px 0 0;
+  color: #70798a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.hiring-primary-button {
+  min-height: 38px;
+  padding: 0 16px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: #1f4fd1;
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.hiring-primary-button:hover {
+  background: #1941ad;
+}
+
+.hiring-primary-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.hiring-secondary-button {
+  min-height: 34px;
+  padding: 0 12px;
+
+  border: 1px solid #dfe3e9;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #344054;
+
+  font-size: 11px;
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+.hiring-secondary-button:hover {
+  background: #f8fafc;
+  border-color: #cfd5dd;
+}
+
+
+/* =========================================================
+   MAIN WORKSPACE
+========================================================= */
+
+.hiring-workspace {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+
+/* =========================================================
+   LIST CARD
+========================================================= */
+
+.hiring-list-card,
+.hiring-details-card {
+  background: #ffffff;
+  border: 1px solid #e5e8ee;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.hiring-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 18px 20px;
+
+  border-bottom: 1px solid #edf0f4;
+}
+
+.hiring-card-header h2 {
+  margin: 0;
+
+  color: #202938;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.hiring-card-header span {
+  display: block;
+  margin-top: 5px;
+
+  color: #8992a1;
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   DRIVE LIST
+========================================================= */
+
+.hiring-drive-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.hiring-drive-item {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  padding: 13px 15px;
+
+  border: none;
+  border-bottom: 1px solid #f0f2f5;
+
+  background: #ffffff;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.hiring-drive-item:last-child {
+  border-bottom: none;
+}
+
+.hiring-drive-item:hover {
+  background: #fafbfc;
+}
+
+.hiring-drive-item.selected {
+  background: #f1f5ff;
+  box-shadow: inset 3px 0 0 #1f4fd1;
+}
+
+.hiring-drive-avatar {
+  width: 36px;
+  height: 36px;
+
+  flex: 0 0 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  background: #edf3ff;
+  color: #1f4fd1;
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.hiring-drive-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.hiring-drive-info strong {
+  display: block;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #273142;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.hiring-drive-info span {
+  display: block;
+
+  margin-top: 3px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #8992a1;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.hiring-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px 8px;
+
+  border-radius: 20px;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hiring-status.large {
+  padding: 5px 10px;
+  font-size: 10px;
+}
+
+.hiring-status.draft {
+  background: #f2f3f5;
+  color: #747b87;
+}
+
+.hiring-status.active {
+  background: #eaf7ef;
+  color: #18794e;
+}
+
+.hiring-status.published {
+  background: #eaf7ef;
+  color: #18794e;
+}
+
+.hiring-status.completed {
+  background: #edf3ff;
+  color: #1f4fd1;
+}
+
+.hiring-status.closed {
+  background: #fef0f0;
+  color: #b42318;
+}
+
+
+/* =========================================================
+   EMPTY STATES
+========================================================= */
+
+.hiring-empty {
+  padding: 55px 20px;
+
+  text-align: center;
+}
+
+.hiring-empty-icon,
+.hiring-select-icon {
+  width: 46px;
+  height: 46px;
+
+  margin: 0 auto 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #edf3ff;
+  color: #1f4fd1;
+
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.hiring-empty h3,
+.hiring-select-state h2 {
+  margin: 0;
+
+  color: #273142;
+  font-size: 15px;
+}
+
+.hiring-empty p,
+.hiring-select-state p {
+  max-width: 360px;
+
+  margin: 7px auto 0;
+
+  color: #8992a1;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.hiring-select-state {
+  min-height: 480px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   DETAIL HEADER
+========================================================= */
+
+.hiring-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 20px;
+
+  padding: 22px 24px;
+
+  border-bottom: 1px solid #edf0f4;
+}
+
+.hiring-detail-header h2 {
+  margin: 0;
+
+  color: #172033;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.hiring-detail-header p {
+  margin: 5px 0 0;
+
+  color: #70798a;
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   DETAIL CONTENT
+========================================================= */
+
+.hiring-detail-content {
+  padding: 22px 24px;
+}
+
+.hiring-detail-loading {
+  padding: 55px;
+
+  text-align: center;
+
+  color: #8992a1;
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.hiring-section {
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+
+  border-bottom: 1px solid #edf0f4;
+}
+
+.hiring-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.hiring-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 20px;
+
+  margin-bottom: 15px;
+}
+
+.hiring-section-heading h3 {
+  margin: 0;
+
+  color: #273142;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.hiring-section-heading p {
+  margin: 4px 0 0;
+
+  color: #8992a1;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   OVERVIEW
+========================================================= */
+
+.hiring-overview-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  border: 1px solid #e9ecf1;
+  border-radius: 8px;
+
+  overflow: hidden;
+}
+
+.hiring-overview-item {
+  min-width: 0;
+
+  padding: 13px 14px;
+
+  border-right: 1px solid #e9ecf1;
+}
+
+.hiring-overview-item:last-child {
+  border-right: none;
+}
+
+.hiring-overview-item span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #8992a1;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hiring-overview-item strong {
+  display: block;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #273142;
+  font-size: 11px;
+}
+
+.hiring-description {
+  margin-top: 12px;
+
+  padding: 12px 14px;
+
+  border: 1px solid #e9ecf1;
+  border-radius: 8px;
+
+  background: #fafbfc;
+}
+
+.hiring-description span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #8992a1;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hiring-description p {
+  margin: 0;
+
+  color: #596375;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+
+/* =========================================================
+   DATA LIST
+========================================================= */
+
+.hiring-data-list {
+  border: 1px solid #e9ecf1;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.hiring-data-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding: 12px 14px;
+
+  border-bottom: 1px solid #edf0f4;
+}
+
+.hiring-data-row:last-child {
+  border-bottom: none;
+}
+
+.hiring-row-main {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.hiring-row-icon {
+  width: 32px;
+  height: 32px;
+
+  flex: 0 0 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+
+  background: #edf3ff;
+  color: #1f4fd1;
+
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.hiring-row-icon.exam {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.hiring-row-main > div:last-child {
+  min-width: 0;
+}
+
+.hiring-row-main strong {
+  display: block;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #273142;
+  font-size: 11px;
+}
+
+.hiring-row-main span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #8992a1;
+  font-size: 10px;
+}
+
+.hiring-remove-button {
+  flex: 0 0 auto;
+
+  padding: 6px 10px;
+
+  border: 1px solid #f1d4d4;
+  border-radius: 6px;
+
+  background: #fffafa;
+  color: #b42318;
+
+  font-size: 10px;
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+.hiring-remove-button:hover {
+  background: #fef0f0;
+}
+
+.hiring-small-empty {
+  padding: 18px;
+
+  border: 1px dashed #dfe3e9;
+  border-radius: 8px;
+
+  background: #fafbfc;
+
+  color: #8992a1;
+
+  text-align: center;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   ASSIGNMENT CARD
+========================================================= */
+
+.hiring-assignment-card {
+  padding: 18px;
+
+  border: 1px solid #e2e7ef;
+  border-radius: 9px;
+
+  background: #fafbfc;
+}
+
+.hiring-assignment-header {
+  margin-bottom: 18px;
+}
+
+.hiring-section-kicker {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #1f4fd1;
+
+  font-size: 9px;
+  font-weight: 750;
+
+  letter-spacing: 0.08em;
+}
+
+.hiring-assignment-header h3 {
+  margin: 0;
+
+  color: #273142;
+  font-size: 15px;
+}
+
+.hiring-assignment-header p {
+  margin: 5px 0 0;
+
+  color: #8992a1;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.hiring-assignment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+
+/* =========================================================
+   FORM FIELDS
+========================================================= */
+
+.hiring-field label,
+.hiring-form-field label {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #4d586a;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.hiring-field select,
+.hiring-form-field input,
+.hiring-form-field select,
+.hiring-form-field textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dfe3e9;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #273142;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  outline: none;
+}
+
+.hiring-field select,
+.hiring-form-field input,
+.hiring-form-field select {
+  height: 40px;
+  padding: 0 11px;
+}
+
+.hiring-form-field textarea {
+  min-height: 90px;
+  padding: 10px 11px;
+  resize: vertical;
+}
+
+.hiring-field select:focus,
+.hiring-form-field input:focus,
+.hiring-form-field select:focus,
+.hiring-form-field textarea:focus {
+  border-color: #1f4fd1;
+  box-shadow:
+    0 0 0 3px
+    rgba(31, 79, 209, 0.07);
+}
+
+.hiring-field select:disabled,
+.hiring-form-field select:disabled {
+  background: #f7f8fa;
+  color: #98a2b3;
+  cursor: not-allowed;
+}
+
+.hiring-field-help {
+  display: block;
+
+  margin-top: 5px;
+
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.hiring-field-help.error {
+  color: #b42318;
+}
+
+
+/* =========================================================
+   ASSIGNMENT SCOPE
+========================================================= */
+
+.hiring-scope-box {
+  padding: 14px;
+
+  border: 1px solid #e4e8ef;
+  border-radius: 8px;
+
+  background: #ffffff;
+}
+
+.hiring-scope-heading {
+  margin-bottom: 11px;
+}
+
+.hiring-scope-heading strong {
+  display: block;
+
+  color: #344054;
+  font-size: 11px;
+}
+
+.hiring-scope-heading span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #98a2b3;
+  font-size: 10px;
+}
+
+.hiring-scope-options {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 8px;
+}
+
+.hiring-scope-option {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 8px;
+
+  min-width: 0;
+
+  padding: 11px;
+
+  border: 1px solid #e1e5eb;
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.hiring-scope-option:hover {
+  background: #fafbfc;
+}
+
+.hiring-scope-option.active {
+  border-color: #9bb4ed;
+  background: #f4f7ff;
+}
+
+.hiring-scope-option input {
+  margin-top: 2px;
+  accent-color: #1f4fd1;
+}
+
+.hiring-scope-option div {
+  min-width: 0;
+}
+
+.hiring-scope-option strong {
+  display: block;
+
+  color: #344054;
+  font-size: 10px;
+}
+
+.hiring-scope-option span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #8992a1;
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   ASSIGNMENT SUMMARY
+========================================================= */
+
+.hiring-assignment-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+
+  gap: 1px;
+
+  border: 1px solid #e1e5eb;
+  border-radius: 8px;
+
+  overflow: hidden;
+
+  background: #e1e5eb;
+}
+
+.hiring-assignment-summary > div {
+  min-width: 0;
+
+  padding: 11px;
+
+  background: #ffffff;
+}
+
+.hiring-assignment-summary span {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #8992a1;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.hiring-assignment-summary strong {
+  display: block;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: #344054;
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   ASSIGNMENT ACTION
+========================================================= */
+
+.hiring-assignment-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hiring-assign-button {
+  min-height: 40px;
+
+  padding: 0 17px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: #1f4fd1;
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 650;
+
+  cursor: pointer;
+}
+
+.hiring-assign-button:hover {
+  background: #1941ad;
+}
+
+.hiring-assign-button:disabled {
+  background: #b8c2d3;
+  cursor: not-allowed;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.hiring-modal-overlay {
+  position: fixed;
+  inset: 0;
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.hiring-modal {
+  width: min(500px, 100%);
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  padding: 22px;
+
+  border: 1px solid #e5e8ee;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 20px 50px
+    rgba(15, 23, 42, 0.14);
+}
+
+.hiring-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 20px;
+
+  margin-bottom: 22px;
+}
+
+.hiring-modal-kicker {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #1f4fd1;
+
+  font-size: 9px;
+  font-weight: 750;
+
+  letter-spacing: 0.08em;
+}
+
+.hiring-modal-header h2 {
+  margin: 0;
+
+  color: #202938;
+  font-size: 18px;
+}
+
+.hiring-modal-header p {
+  margin: 5px 0 0;
+
+  color: #8992a1;
+  font-size: 11px;
+}
+
+.hiring-modal-close {
+  width: 30px;
+  height: 30px;
+
+  flex: 0 0 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 6px;
+
+  background: transparent;
+  color: #697386;
+
+  font-size: 22px;
+
+  cursor: pointer;
+}
+
+.hiring-modal-close:hover {
+  background: #f2f4f7;
+}
+
+.hiring-form-section {
+  width: 100%;
+}
+
+.hiring-form-section-heading {
+  margin-bottom: 15px;
+}
+
+.hiring-form-section-heading span {
+  display: block;
+
+  color: #667085;
+
+  font-size: 9px;
+  font-weight: 750;
+
+  letter-spacing: 0.08em;
+}
+
+.hiring-form-section-heading p {
+  margin: 4px 0 0;
+
+  color: #98a2b3;
+  font-size: 10px;
+}
+
+.hiring-form-field {
+  margin-bottom: 15px;
+}
+
+.hiring-form-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+.hiring-form-info {
+  margin-bottom: 15px;
+
+  padding: 10px 12px;
+
+  border: 1px solid #e5e8ee;
+  border-radius: 7px;
+
+  background: #fafbfc;
+
+  color: #667085;
+
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.hiring-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 9px;
+
+  margin-top: 22px;
+  padding-top: 17px;
+
+  border-top: 1px solid #edf0f4;
+}
+
+.hiring-cancel-button {
+  min-height: 38px;
+
+  padding: 0 15px;
+
+  border: 1px solid #dfe3e9;
+  border-radius: 7px;
+
+  background: #ffffff;
+  color: #596375;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.hiring-cancel-button:hover {
+  background: #f8fafc;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.hiring-loading {
+  min-height: 300px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #8992a1;
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+  .hiring-workspace {
+    grid-template-columns: 280px minmax(0, 1fr);
+  }
+
+  .hiring-overview-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .hiring-overview-item:nth-child(2) {
+    border-right: none;
+  }
+
+  .hiring-overview-item:nth-child(-n + 2) {
+    border-bottom: 1px solid #e9ecf1;
+  }
+
+  .hiring-scope-options {
+    grid-template-columns: 1fr;
+  }
+
+  .hiring-assignment-summary {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 850px) {
+  .hiring-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .hiring-list-card {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .hiring-select-state {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 700px) {
+  .hiring-page {
+    padding: 20px;
+  }
+
+  .hiring-page-header {
+    flex-direction: column;
+  }
+
+  .hiring-page-header h1 {
+    font-size: 24px;
+  }
+
+  .hiring-detail-header {
+    flex-direction: column;
+  }
+
+  .hiring-detail-content {
+    padding: 18px;
+  }
+
+  .hiring-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hiring-overview-item {
+    border-right: none;
+    border-bottom: 1px solid #e9ecf1;
+  }
+
+  .hiring-overview-item:last-child {
+    border-bottom: none;
+  }
+
+  .hiring-section-heading {
+    flex-direction: column;
+  }
+
+  .hiring-data-row {
+    align-items: flex-start;
+  }
+
+  .hiring-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hiring-assignment-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .hiring-assignment-actions {
+    justify-content: stretch;
+  }
+
+  .hiring-assign-button {
+    width: 100%;
+  }
+}

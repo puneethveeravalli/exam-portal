@@ -1,0 +1,1133 @@
+/* =========================================================
+   EXAM PORTAL: GLOBAL STYLES ("Quiet Precision")
+   Tokens · Reset · Canvas · Shared ep- primitives
+   ========================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+/* =========================================
+   TOKENS
+   ========================================= */
+
+:root {
+  /* Color */
+  --ep-canvas: #F6F5F1;
+  --ep-surface: #FFFFFF;
+  --ep-surface-alt: #FBFAF7;
+  --ep-ink: #14161B;
+  --ep-ink-soft: #4B5160;
+  --ep-ink-mute: #8A8F9C;
+  --ep-line: #E7E5DE;
+  --ep-accent: #3D4AF0;
+  --ep-accent-hover: #2F3BD1;
+  --ep-accent-tint: rgba(61, 74, 240, 0.08);
+  --ep-success: #0F9D6B;
+  --ep-warning: #C97A00;
+  --ep-danger: #D92D4C;
+
+  /* Tints derived from status colors */
+  --ep-success-tint: rgba(15, 157, 107, 0.1);
+  --ep-warning-tint: rgba(201, 122, 0, 0.1);
+  --ep-danger-tint: rgba(217, 45, 76, 0.08);
+
+  /* Typography */
+  --ep-font-display: "Instrument Serif", Georgia, serif;
+  --ep-font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ep-font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* Radius, spacing, shadow */
+  --ep-radius-sm: 8px;
+  --ep-radius-md: 12px;
+  --ep-radius-lg: 18px;
+  --ep-space: 8px;
+  --ep-shadow-sm: 0 1px 2px rgba(20, 22, 27, 0.05);
+  --ep-shadow-md: 0 8px 30px rgba(20, 22, 27, 0.06);
+  --ep-shadow-lg: 0 24px 60px rgba(20, 22, 27, 0.10);
+
+  /* Motion */
+  --ep-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ep-fast: 160ms;
+  --ep-base: 280ms;
+  --ep-slow: 600ms;
+
+  font-family: var(--ep-font-body);
+  color: var(--ep-ink);
+  background: var(--ep-canvas);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =========================================
+   RESET
+   ========================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  overflow-x: hidden;
+
+  background: var(--ep-canvas);
+  color: var(--ep-ink);
+  font-family: var(--ep-font-body);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 0;
+}
+
+/* Canvas: fine dotted grid, CSS only, very low opacity */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    rgba(20, 22, 27, 0.07) 1px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(
+    ellipse at 50% 30%,
+    #000 0%,
+    transparent 75%
+  );
+  mask-image: radial-gradient(ellipse at 50% 30%, #000 0%, transparent 75%);
+}
+
+/* =========================================
+   BASE TYPOGRAPHY
+   ========================================= */
+
+h1, h2, h3, h4, h5, h6, p {
+  margin-top: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--ep-ink);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+p {
+  color: var(--ep-ink-soft);
+}
+
+button, input, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--ep-accent);
+  text-decoration: none;
+  transition: color var(--ep-fast) var(--ep-ease);
+}
+
+a:hover {
+  color: var(--ep-accent-hover);
+}
+
+::selection {
+  background: var(--ep-accent-tint);
+  color: var(--ep-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ep-accent);
+  outline-offset: 2px;
+}
+
+/* Thin, quiet scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ep-line) transparent;
+}
+
+/* =========================================
+   FULLSCREEN SUPPORT
+   ========================================= */
+
+:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  background: var(--ep-canvas);
+}
+
+:fullscreen #root {
+  width: 100vw;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
+/* =========================================
+   SHARED: TYPE UTILITIES
+   ========================================= */
+
+.ep-display {
+  font-family: var(--ep-font-display);
+  font-weight: 400;
+  font-size: clamp(32px, 5vw, 56px);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--ep-ink);
+}
+
+.ep-display em {
+  font-style: italic;
+  color: var(--ep-accent);
+}
+
+.ep-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ep-ink-mute);
+}
+
+.ep-caption {
+  font-size: 12px;
+  color: var(--ep-ink-mute);
+}
+
+.ep-mono {
+  font-family: var(--ep-font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* =========================================
+   SHARED: LAYOUT
+   ========================================= */
+
+.ep-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 64px;
+}
+
+.ep-stack {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ep-space) * 3);
+}
+
+.ep-row {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--ep-space) * 2);
+}
+
+/* =========================================
+   SHARED: ENTRANCE MOTION
+   Usage: <section className="ep-reveal" style={{ "--i": 0 }}>
+   ========================================= */
+
+.ep-reveal {
+  opacity: 0;
+  animation: epFadeUp var(--ep-slow) var(--ep-ease) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+@keyframes epFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ep-route {
+  animation: epRoute var(--ep-base) var(--ep-ease) both;
+}
+
+@keyframes epRoute {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =========================================
+   SHARED: CARD
+   ========================================= */
+
+.ep-card {
+  position: relative;
+  padding: 32px;
+  background: var(--ep-surface);
+  border: 1px solid var(--ep-line);
+  border-radius: var(--ep-radius-lg);
+  box-shadow: var(--ep-shadow-md);
+  transition:
+    transform var(--ep-base) var(--ep-ease),
+    box-shadow var(--ep-base) var(--ep-ease);
+}
+
+.ep-card--interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ep-shadow-lg);
+}
+
+.ep-card--alt {
+  background: var(--ep-surface-alt);
+  box-shadow: none;
+}
+
+/* =========================================
+   SHARED: FOCUS FRAME (signature element)
+   Four corner brackets that draw in on load.
+   Use on 1-2 primary panels per page.
+   ========================================= */
+
+.ep-frame {
+  position: relative;
+}
+
+.ep-frame::before {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  pointer-events: none;
+  border-radius: calc(var(--ep-radius-lg) + 4px);
+
+  --ep-c: 18px;
+  --ep-t: 1.5px;
+  background:
+    linear-gradient(var(--ep-accent), var(--ep-accent)) top left / var(--ep-c) var(--ep-t),
+    linear-gradient(var(--ep-accent), var(--ep-accent)) top left / var(--ep-t) var(--ep-c),
+    linear-gradient(var(--ep-accent), var(--ep-accent)) top right / var(--ep-c) var(--ep-t),
+    linear-gradient(var(--ep-accent), var(--ep-accent)) top right / var(--ep-t) var(--ep-c),
+    linear-gradient(var(--ep-accent), var(--ep-accent)) bottom left / var(--ep-c) var(--ep-t),
+    linear-gradient(var(--ep-accent), var(--ep-accent)) bottom left / var(--ep-t) var(--ep-c),
+    linear-gradient(var(--ep-accent), var(--ep-accent)) bottom right / var(--ep-c) var(--ep-t),
+    linear-gradient(var(--ep-accent), var(--ep-accent)) bottom right / var(--ep-t) var(--ep-c);
+  background-repeat: no-repeat;
+
+  opacity: 0;
+  transform: scale(1.04);
+  animation: epFrameDraw 500ms var(--ep-ease) 250ms both;
+}
+
+@keyframes epFrameDraw {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+  to {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+}
+
+/* =========================================
+   SHARED: BUTTONS
+   ========================================= */
+
+.ep-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  height: 46px;
+  padding: 0 22px;
+
+  border: 1px solid transparent;
+  border-radius: var(--ep-radius-md);
+
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+
+  transition:
+    background var(--ep-fast) var(--ep-ease),
+    border-color var(--ep-fast) var(--ep-ease),
+    box-shadow var(--ep-base) var(--ep-ease),
+    transform var(--ep-fast) var(--ep-ease),
+    color var(--ep-fast) var(--ep-ease);
+}
+
+.ep-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.ep-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.ep-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.ep-btn--primary {
+  background: var(--ep-accent);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(61, 74, 240, 0.3);
+}
+
+.ep-btn--primary:hover:not(:disabled) {
+  background: var(--ep-accent-hover);
+  box-shadow: 0 8px 20px rgba(61, 74, 240, 0.22);
+}
+
+.ep-btn--secondary {
+  background: var(--ep-surface);
+  color: var(--ep-ink);
+  border-color: var(--ep-line);
+  box-shadow: var(--ep-shadow-sm);
+}
+
+.ep-btn--secondary:hover:not(:disabled) {
+  border-color: var(--ep-ink-mute);
+  box-shadow: var(--ep-shadow-md);
+}
+
+.ep-btn--ghost {
+  background: transparent;
+  color: var(--ep-ink-soft);
+}
+
+.ep-btn--ghost:hover:not(:disabled) {
+  background: var(--ep-accent-tint);
+  color: var(--ep-accent);
+  transform: none;
+}
+
+.ep-btn--danger {
+  background: var(--ep-danger);
+  color: #fff;
+}
+
+.ep-btn--danger:hover:not(:disabled) {
+  box-shadow: 0 8px 20px rgba(217, 45, 76, 0.22);
+}
+
+.ep-btn--sm {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 13px;
+  border-radius: var(--ep-radius-sm);
+}
+
+.ep-btn--block {
+  width: 100%;
+}
+
+.ep-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: epSpin 700ms linear infinite;
+}
+
+@keyframes epSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================
+   SHARED: FORM FIELDS
+   ========================================= */
+
+.ep-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ep-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ep-ink);
+}
+
+.ep-input,
+.ep-select,
+.ep-textarea {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+
+  background: var(--ep-surface);
+  color: var(--ep-ink);
+  border: 1px solid var(--ep-line);
+  border-radius: var(--ep-radius-md);
+  outline: none;
+
+  font-size: 14px;
+
+  transition:
+    border-color var(--ep-fast) var(--ep-ease),
+    box-shadow var(--ep-fast) var(--ep-ease),
+    background var(--ep-fast) var(--ep-ease);
+}
+
+.ep-textarea {
+  height: auto;
+  min-height: 120px;
+  padding: 12px 14px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.ep-input::placeholder,
+.ep-textarea::placeholder {
+  color: var(--ep-ink-mute);
+}
+
+.ep-input:hover:not(:disabled),
+.ep-select:hover:not(:disabled),
+.ep-textarea:hover:not(:disabled) {
+  border-color: var(--ep-ink-mute);
+}
+
+.ep-input:focus,
+.ep-select:focus,
+.ep-textarea:focus {
+  border-color: var(--ep-accent);
+  box-shadow: 0 0 0 3px var(--ep-accent-tint);
+}
+
+.ep-input:disabled,
+.ep-select:disabled,
+.ep-textarea:disabled {
+  background: var(--ep-surface-alt);
+  color: var(--ep-ink-mute);
+  cursor: not-allowed;
+}
+
+.ep-input[aria-invalid="true"] {
+  border-color: var(--ep-danger);
+}
+
+.ep-hint {
+  font-size: 12px;
+  color: var(--ep-ink-mute);
+}
+
+/* =========================================
+   SHARED: ALERTS (inline, role="alert")
+   ========================================= */
+
+.ep-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--ep-radius-md);
+
+  font-size: 13px;
+  line-height: 1.5;
+
+  animation: epAlertIn var(--ep-base) var(--ep-ease) both;
+}
+
+.ep-alert--danger {
+  background: var(--ep-danger-tint);
+  border-color: rgba(217, 45, 76, 0.2);
+  color: var(--ep-danger);
+}
+
+.ep-alert--warning {
+  background: var(--ep-warning-tint);
+  border-color: rgba(201, 122, 0, 0.22);
+  color: var(--ep-warning);
+}
+
+.ep-alert--success {
+  background: var(--ep-success-tint);
+  border-color: rgba(15, 157, 107, 0.22);
+  color: var(--ep-success);
+}
+
+.ep-alert--info {
+  background: var(--ep-accent-tint);
+  border-color: rgba(61, 74, 240, 0.2);
+  color: var(--ep-accent);
+}
+
+.ep-alert__icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+}
+
+@keyframes epAlertIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide-in banner for proctoring violations (calm, one clear action) */
+.ep-banner {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  z-index: 100;
+  width: min(560px, calc(100% - 32px));
+  transform: translateX(-50%);
+  animation: epBannerIn var(--ep-base) var(--ep-ease) both;
+}
+
+@keyframes epBannerIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -16px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+/* Modal */
+.ep-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(20, 22, 27, 0.4);
+  backdrop-filter: blur(4px);
+  animation: epFade var(--ep-base) var(--ep-ease) both;
+}
+
+.ep-modal {
+  width: 100%;
+  max-width: 460px;
+  padding: 32px;
+  background: var(--ep-surface);
+  border-radius: var(--ep-radius-lg);
+  box-shadow: var(--ep-shadow-lg);
+  animation: epFadeUp var(--ep-base) var(--ep-ease) both;
+}
+
+@keyframes epFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* =========================================
+   SHARED: CHIPS / BADGES
+   ========================================= */
+
+.ep-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  height: 24px;
+  padding: 0 10px;
+
+  border-radius: 999px;
+  background: var(--ep-surface-alt);
+  border: 1px solid var(--ep-line);
+  color: var(--ep-ink-soft);
+
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.ep-chip--accent {
+  background: var(--ep-accent-tint);
+  border-color: transparent;
+  color: var(--ep-accent);
+}
+
+.ep-chip--success {
+  background: var(--ep-success-tint);
+  border-color: transparent;
+  color: var(--ep-success);
+}
+
+.ep-chip--warning {
+  background: var(--ep-warning-tint);
+  border-color: transparent;
+  color: var(--ep-warning);
+}
+
+.ep-chip--danger {
+  background: var(--ep-danger-tint);
+  border-color: transparent;
+  color: var(--ep-danger);
+}
+
+/* Live indicator dot (camera on, fullscreen, tab focus) */
+.ep-live-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.ep-live-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: currentColor;
+  animation: epLive 2.4s ease-out infinite;
+}
+
+@keyframes epLive {
+  0%   { transform: scale(1);   opacity: 0.45; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+
+/* =========================================
+   SHARED: STATS & PROGRESS
+   ========================================= */
+
+.ep-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ep-stat__value {
+  font-family: var(--ep-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 36px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--ep-ink);
+}
+
+.ep-stat__label {
+  font-size: 13px;
+  color: var(--ep-ink-soft);
+}
+
+.ep-progress {
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--ep-line);
+}
+
+/* Set --value on the element: style={{ "--value": "72%" }} */
+.ep-progress__bar {
+  height: 100%;
+  width: var(--value, 0%);
+  border-radius: inherit;
+  background: var(--ep-accent);
+  transform-origin: left;
+  animation: epGrow var(--ep-slow) var(--ep-ease) 200ms both;
+}
+
+@keyframes epGrow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* =========================================
+   SHARED: TABLE
+   ========================================= */
+
+.ep-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.ep-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.ep-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ep-ink-mute);
+  border-bottom: 1px solid var(--ep-line);
+}
+
+.ep-table td {
+  padding: 16px;
+  color: var(--ep-ink);
+  border-bottom: 1px solid var(--ep-line);
+}
+
+.ep-table tbody tr {
+  transition: background var(--ep-fast) var(--ep-ease);
+}
+
+.ep-table tbody tr:hover {
+  background: var(--ep-surface-alt);
+}
+
+.ep-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================================
+   SHARED: LOADING & EMPTY STATES
+   ========================================= */
+
+.ep-skeleton {
+  display: block;
+  min-height: 14px;
+  border-radius: var(--ep-radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--ep-line) 0%,
+    var(--ep-surface-alt) 50%,
+    var(--ep-line) 100%
+  );
+  background-size: 200% 100%;
+  animation: epShimmer 1.4s linear infinite;
+}
+
+@keyframes epShimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+.ep-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 56px 24px;
+  text-align: center;
+}
+
+.ep-empty__title {
+  margin: 0;
+  font-family: var(--ep-font-display);
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--ep-ink);
+}
+
+.ep-empty__text {
+  max-width: 320px;
+  margin: 0;
+  font-size: 14px;
+  color: var(--ep-ink-mute);
+}
+
+/* =========================================
+   SHARED: NAVIGATION ITEM
+   Active = accent bar + tint (not a filled block)
+   ========================================= */
+
+.ep-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  height: 42px;
+  padding: 0 14px;
+
+  border-radius: var(--ep-radius-sm);
+  color: var(--ep-ink-soft);
+
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+
+  transition:
+    background var(--ep-fast) var(--ep-ease),
+    color var(--ep-fast) var(--ep-ease);
+}
+
+.ep-nav-item svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ep-nav-item:hover {
+  background: var(--ep-surface-alt);
+  color: var(--ep-ink);
+}
+
+.ep-nav-item[aria-current="page"],
+.ep-nav-item.active {
+  background: var(--ep-accent-tint);
+  color: var(--ep-accent);
+}
+
+.ep-nav-item[aria-current="page"]::before,
+.ep-nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--ep-accent);
+  animation: epBar var(--ep-base) var(--ep-ease) both;
+}
+
+@keyframes epBar {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+/* =========================================
+   SHARED: EXAM TIMER
+   Use data-state="warning" (last 10 min)
+   and data-state="critical" (last 60 sec)
+   ========================================= */
+
+.ep-timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 14px;
+
+  background: var(--ep-surface);
+  border: 1px solid var(--ep-line);
+  border-radius: var(--ep-radius-md);
+
+  font-family: var(--ep-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ep-ink);
+
+  transition:
+    color var(--ep-base) var(--ep-ease),
+    border-color var(--ep-base) var(--ep-ease);
+}
+
+.ep-timer[data-state="warning"] {
+  color: var(--ep-warning);
+  border-color: var(--ep-warning);
+}
+
+.ep-timer[data-state="critical"] {
+  color: var(--ep-danger);
+  border-color: var(--ep-danger);
+  animation: epPulse 1s ease-in-out infinite;
+}
+
+@keyframes epPulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+
+/* =========================================
+   SHARED: QUESTION NAVIGATOR CHIP
+   States differ by shape/marker, not just color.
+   data-state: unanswered | answered | current | flagged
+   ========================================= */
+
+.ep-qgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+  gap: 8px;
+}
+
+.ep-qchip {
+  position: relative;
+  height: 44px;
+
+  background: var(--ep-surface);
+  border: 1px solid var(--ep-line);
+  border-radius: var(--ep-radius-sm);
+
+  font-family: var(--ep-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  color: var(--ep-ink-soft);
+  cursor: pointer;
+
+  transition:
+    background var(--ep-fast) var(--ep-ease),
+    border-color var(--ep-fast) var(--ep-ease),
+    transform var(--ep-fast) var(--ep-ease);
+}
+
+.ep-qchip:hover {
+  border-color: var(--ep-accent);
+}
+
+.ep-qchip:active {
+  transform: scale(0.96);
+}
+
+/* answered: tinted fill + bottom bar */
+.ep-qchip[data-state="answered"] {
+  background: var(--ep-accent-tint);
+  border-color: transparent;
+  color: var(--ep-accent);
+}
+
+.ep-qchip[data-state="answered"]::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 5px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--ep-accent);
+}
+
+/* current: solid accent */
+.ep-qchip[data-state="current"] {
+  background: var(--ep-accent);
+  border-color: var(--ep-accent);
+  color: #fff;
+}
+
+/* flagged: dashed border + corner marker */
+.ep-qchip[data-state="flagged"] {
+  border: 1px dashed var(--ep-warning);
+  color: var(--ep-warning);
+}
+
+.ep-qchip[data-state="flagged"]::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ep-warning);
+}
+
+/* =========================================
+   SHARED: VISUALLY HIDDEN (a11y)
+   ========================================= */
+
+.ep-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 768px) {
+  .ep-page {
+    padding: 24px 16px 48px;
+  }
+
+  .ep-card {
+    padding: 24px 20px;
+  }
+
+  .ep-stat__value {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 520px) {
+  .ep-modal {
+    padding: 24px 20px;
+  }
+}
+
+/* =========================================
+   REDUCED MOTION
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .ep-reveal,
+  .ep-route {
+    opacity: 1;
+  }
+
+  .ep-frame::before {
+    opacity: 0.9;
+    transform: none;
+  }
+
+  .ep-progress__bar {
+    transform: none;
+  }
+}

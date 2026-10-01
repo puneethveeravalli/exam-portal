@@ -1,0 +1,79 @@
+/* =========================================
+   EXAM PORTAL: APPLICATION SHELL
+   Tokens, fonts, focus ring, selection and base
+   scrollbar are defined in index.css.
+   ========================================= */
+
+.app {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: transparent; /* lets the canvas dot grid show through */
+  color: var(--ep-ink);
+}
+
+/* =========================================
+   ROUTE TRANSITION
+   Each page root fades and slides in once on mount.
+   "backwards" fill leaves no transform behind, so
+   fixed banners/modals inside pages still position
+   against the viewport.
+   ========================================= */
+
+.app > * {
+  animation: epRoute var(--ep-base) var(--ep-ease) backwards;
+}
+
+/* =========================================
+   BASE INTERACTION
+   ========================================= */
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+}
+
+/* =========================================
+   SCROLLBAR (WebKit)
+   Firefox is handled in index.css.
+   ========================================= */
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--ep-line);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: background var(--ep-fast) var(--ep-ease);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--ep-ink-mute);
+  background-clip: padding-box;
+}
+
+/* =========================================
+   REDUCED MOTION
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .app > * {
+    animation: none;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    transition: none;
+  }
+}

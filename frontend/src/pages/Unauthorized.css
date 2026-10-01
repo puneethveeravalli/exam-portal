@@ -1,0 +1,128 @@
+.unauthorized-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(52, 64, 84, 0.07),
+      transparent 38%
+    ),
+    #f6f8fb;
+  color: #172033;
+}
+
+.unauthorized-card {
+  width: min(460px, 100%);
+  padding: 48px 40px;
+  border: 1px solid #e3e7ee;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 12px 40px rgba(16, 24, 40, 0.07);
+  text-align: center;
+  animation: unauthorizedFadeUp 0.45s ease both;
+}
+
+.unauthorized-code {
+  color: #344054;
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.unauthorized-divider {
+  width: 42px;
+  height: 3px;
+  margin: 20px auto 22px;
+  border-radius: 999px;
+  background: #344054;
+}
+
+.unauthorized-card h1 {
+  margin: 0;
+  color: #172033;
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+}
+
+.unauthorized-card p {
+  max-width: 360px;
+  margin: 12px auto 28px;
+  color: #667085;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.unauthorized-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 9px;
+  background: #172033;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 650;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.unauthorized-button:hover {
+  background: #273248;
+  box-shadow: 0 6px 16px rgba(23, 32, 51, 0.15);
+  transform: translateY(-1px);
+}
+
+.unauthorized-button:active {
+  transform: translateY(0);
+}
+
+@keyframes unauthorizedFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .unauthorized-page {
+    padding: 16px;
+  }
+
+  .unauthorized-card {
+    padding: 40px 24px;
+    border-radius: 15px;
+  }
+
+  .unauthorized-code {
+    font-size: 54px;
+  }
+
+  .unauthorized-card h1 {
+    font-size: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .unauthorized-card {
+    animation: none;
+  }
+
+  .unauthorized-button {
+    transition: none;
+  }
+}
